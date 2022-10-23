@@ -74,7 +74,13 @@ bool reader_check_space(struct reader* reader) {
 }
 
 bool reader_checks(struct reader* reader, const char* str) {
-    // TODO
+    size_t  index;
+
+    for (index = 0; str[index] != '\0' && str[index] == reader->ptr[index]; index++);
+    if (str[index] == '\0') {
+        reader->ptr += index;
+        return true;
+    }
     return false;
 }
 

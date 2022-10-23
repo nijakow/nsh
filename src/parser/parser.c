@@ -34,6 +34,9 @@ static nsh_ast* nsh_parser_parse_simple_expr(struct nsh_parser* parser) {
         stringbuilder_clear(&sb);
 
         reader_skip_whitespaces(parser->reader);
+
+        if (!reader_has(parser->reader)) break;
+
         if (reader_checks(parser->reader, "<<")) {
             nsh_parser_read_word_into(parser, &sb);
             nsh_command_add_redir(command, nsh_redirection_type_heredoc, stringbuilder_get_static(&sb));
@@ -68,7 +71,8 @@ static struct nsh_ast* nsh_parser_parse_expr(struct nsh_parser* parser) {
 
     while (true) {
         reader_skip_whitespaces(parser->reader);
-        if (reader_checks(parser->reader, "|")) expr = nsh_ast_new_pipe(expr, nsh_parser_parse_expr(parser));
+        if (!reader_has(parser->reader)) break;
+        else if (reader_checks(parser->reader, "|")) expr = nsh_ast_new_pipe(expr, nsh_parser_parse_expr(parser));
         else break;
     }
 

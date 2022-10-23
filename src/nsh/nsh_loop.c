@@ -12,7 +12,7 @@ void nsh_process_command(struct nsh* nsh, const char* cmd) {
 
     ast = nsh_parser_parse(&parser);
 
-    printf("%p\n", ast);
+    nsh_ast_dump(ast);
 
     nsh_ast_delete(ast);
 

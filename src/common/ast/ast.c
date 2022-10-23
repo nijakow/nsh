@@ -42,3 +42,23 @@ struct nsh_ast* nsh_ast_new_pipe(struct nsh_ast* left, struct nsh_ast* right) {
 
     return ast;
 }
+
+static void nsh_ast_dump_with_depth(struct nsh_ast* ast, unsigned int depth) {
+    unsigned int  index;
+
+    for (index = 0; index < depth; index++)
+        printf("  ");
+    printf("%p ", ast);
+    switch (ast->type) {
+        case nsh_ast_type_command: printf("command"); break;
+        case nsh_ast_type_pipe: printf("pipe"); break;
+        default: printf("???"); break;
+    }
+    printf("\n");
+    if (ast->left != NULL) nsh_ast_dump_with_depth(ast->left, depth + 1);
+    if (ast->right != NULL) nsh_ast_dump_with_depth(ast->right, depth + 1);
+}
+
+void nsh_ast_dump(struct nsh_ast* ast) {
+    nsh_ast_dump_with_depth(ast, 0);
+}
