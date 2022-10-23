@@ -8,4 +8,6 @@
 #include <string.h>
 #include <signal.h>
 
+#include "util/stdlib.h"
+
 #endif

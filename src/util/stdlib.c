@@ -1,4 +1,4 @@
-#include "stdlib.h"
+#include "../defs.h"
 
 void* nsh_malloc(size_t size) {
     return malloc(size);
