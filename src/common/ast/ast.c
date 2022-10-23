@@ -29,33 +29,37 @@ struct nsh_ast* nsh_ast_new_command(struct nsh_command* command) {
     return ast;
 }
 
-struct nsh_ast* nsh_ast_new_pipe(struct nsh_ast* left, struct nsh_ast* right) {
+struct nsh_ast* nsh_ast_new_binary(enum nsh_ast_type type, struct nsh_ast* left, struct nsh_ast* right) {
     struct nsh_ast*  ast;
 
     ast = nsh_ast_new();
 
     if (ast != NULL) {
-        ast->type  = nsh_ast_type_pipe;
+        ast->type  = type;
         ast->left  = left;
         ast->right = right;
     }
 
     return ast;
+}
+
+
+struct nsh_ast* nsh_ast_new_pipe(struct nsh_ast* left, struct nsh_ast* right) {
+    return nsh_ast_new_binary(nsh_ast_type_pipe, left, right);
 }
 
 struct nsh_ast* nsh_ast_new_semicolon(struct nsh_ast* left, struct nsh_ast* right) {
-    struct nsh_ast*  ast;
-
-    ast = nsh_ast_new();
-
-    if (ast != NULL) {
-        ast->type  = nsh_ast_type_semicolon;
-        ast->left  = left;
-        ast->right = right;
-    }
-
-    return ast;
+    return nsh_ast_new_binary(nsh_ast_type_semicolon, left, right);
 }
+
+struct nsh_ast* nsh_ast_new_and(struct nsh_ast* left, struct nsh_ast* right) {
+    return nsh_ast_new_binary(nsh_ast_type_and, left, right);
+}
+
+struct nsh_ast* nsh_ast_new_or(struct nsh_ast* left, struct nsh_ast* right) {
+    return nsh_ast_new_binary(nsh_ast_type_or, left, right);
+}
+
 
 static void nsh_ast_dump_with_depth(struct nsh_ast* ast, unsigned int depth) {
     unsigned int  index;
@@ -68,6 +72,8 @@ static void nsh_ast_dump_with_depth(struct nsh_ast* ast, unsigned int depth) {
         case nsh_ast_type_command: printf("command"); break;
         case nsh_ast_type_pipe: printf("pipe"); break;
         case nsh_ast_type_semicolon: printf("semicolon"); break;
+        case nsh_ast_type_and: printf("&&"); break;
+        case nsh_ast_type_or: printf("||"); break;
         default: printf("???"); break;
     }
     printf("\n");

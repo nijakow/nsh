@@ -88,8 +88,12 @@ static struct nsh_ast* nsh_parser_parse_expr(struct nsh_parser* parser, int prec
         reader_skip_whitespaces(parser->reader);
         if (!reader_has(parser->reader)) break;
         
-        if (reader_checks(parser->reader, "|"))
-            expr = nsh_ast_new_pipe(expr, nsh_parser_parse_expr(parser, 2));
+        if (reader_checks(parser->reader, "||"))
+            expr = nsh_ast_new_or(expr, nsh_parser_parse_expr(parser, 1));
+        else if (prec >= 2 && reader_checks(parser->reader, "&&"))
+            expr = nsh_ast_new_and(expr, nsh_parser_parse_expr(parser, 1));
+        else if (reader_checks(parser->reader, "|"))
+            expr = nsh_ast_new_pipe(expr, nsh_parser_parse_expr(parser, 1));
         else if (prec >= 3 && reader_checks(parser->reader, ";"))
             expr = nsh_ast_new_semicolon(expr, nsh_parser_parse_expr(parser, prec));
         else
