@@ -18,7 +18,7 @@ static bool nsh_parser_read_word_into(struct nsh_parser* parser, struct stringbu
 
     reader_skip_whitespaces(parser->reader);
 
-    while (reader_has(parser->reader) && !reader_is_space(parser->reader) && !reader_is_any(parser->reader, "|<>&;")) {
+    while (reader_has(parser->reader) && !reader_is_space(parser->reader) && !reader_is_any(parser->reader, "|<>&;()")) {
         stringbuilder_append_char(sb, reader_get_and_advance(parser->reader));
         result = true;
     }
@@ -26,7 +26,7 @@ static bool nsh_parser_read_word_into(struct nsh_parser* parser, struct stringbu
     return result;
 }
 
-static nsh_ast* nsh_parser_parse_simple_expr(struct nsh_parser* parser) {
+static nsh_ast* nsh_parser_parse_command(struct nsh_parser* parser) {
     struct stringbuilder  sb;
     struct nsh_command*   command;
 
@@ -66,6 +66,17 @@ static nsh_ast* nsh_parser_parse_simple_expr(struct nsh_parser* parser) {
     stringbuilder_destroy(&sb);
 
     return nsh_ast_new_command(command);
+}
+
+static struct nsh_ast* nsh_parser_parse_simple_expr(struct nsh_parser* parser) {
+    struct nsh_ast*  ast;
+
+    if (reader_checks(parser->reader, "(")) {
+        ast = nsh_parser_parse(parser);
+        reader_checks(parser->reader, ")");
+        return ast;
+    }
+    return nsh_parser_parse_command(parser);
 }
 
 static struct nsh_ast* nsh_parser_parse_expr(struct nsh_parser* parser, int prec) {
