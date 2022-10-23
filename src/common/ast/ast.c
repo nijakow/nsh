@@ -60,6 +60,9 @@ struct nsh_ast* nsh_ast_new_or(struct nsh_ast* left, struct nsh_ast* right) {
     return nsh_ast_new_binary(nsh_ast_type_or, left, right);
 }
 
+struct nsh_ast* nsh_ast_new_while(struct nsh_ast* left, struct nsh_ast* right) {
+    return nsh_ast_new_binary(nsh_ast_type_while, left, right);
+}
 
 static void nsh_ast_dump_with_depth(struct nsh_ast* ast, unsigned int depth) {
     unsigned int  index;
@@ -74,6 +77,7 @@ static void nsh_ast_dump_with_depth(struct nsh_ast* ast, unsigned int depth) {
         case nsh_ast_type_semicolon: printf("semicolon"); break;
         case nsh_ast_type_and: printf("&&"); break;
         case nsh_ast_type_or: printf("||"); break;
+        case nsh_ast_type_while: printf("while"); break;
         default: printf("???"); break;
     }
     printf("\n");
