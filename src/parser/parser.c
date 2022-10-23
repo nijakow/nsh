@@ -12,14 +12,18 @@ void nsh_parser_destroy(struct nsh_parser* parser) {
 }
 
 static bool nsh_parser_read_word_into(struct nsh_parser* parser, struct stringbuilder* sb) {
+    bool result;
+
+    result = false;
+
     reader_skip_whitespaces(parser->reader);
 
-    if (reader_is_any(parser->reader, "|<>")) return false;
-
-    while (reader_has(parser->reader) && !reader_is_space(parser->reader)) {
+    while (reader_has(parser->reader) && !reader_is_space(parser->reader) && !reader_is_any(parser->reader, "|<>&;")) {
         stringbuilder_append_char(sb, reader_get_and_advance(parser->reader));
+        result = true;
     }
-    return false;
+
+    return result;
 }
 
 static nsh_ast* nsh_parser_parse_simple_expr(struct nsh_parser* parser) {
@@ -64,7 +68,7 @@ static nsh_ast* nsh_parser_parse_simple_expr(struct nsh_parser* parser) {
     return nsh_ast_new_command(command);
 }
 
-static struct nsh_ast* nsh_parser_parse_expr(struct nsh_parser* parser) {
+static struct nsh_ast* nsh_parser_parse_expr(struct nsh_parser* parser, int prec) {
     struct nsh_ast*  expr;
 
     expr = nsh_parser_parse_simple_expr(parser);
@@ -72,13 +76,18 @@ static struct nsh_ast* nsh_parser_parse_expr(struct nsh_parser* parser) {
     while (true) {
         reader_skip_whitespaces(parser->reader);
         if (!reader_has(parser->reader)) break;
-        else if (reader_checks(parser->reader, "|")) expr = nsh_ast_new_pipe(expr, nsh_parser_parse_expr(parser));
-        else break;
+        
+        if (reader_checks(parser->reader, "|"))
+            expr = nsh_ast_new_pipe(expr, nsh_parser_parse_expr(parser, 2));
+        else if (prec >= 3 && reader_checks(parser->reader, ";"))
+            expr = nsh_ast_new_semicolon(expr, nsh_parser_parse_expr(parser, prec));
+        else
+            break;
     }
 
     return expr;
 }
 
 struct nsh_ast* nsh_parser_parse(struct nsh_parser* parser) {
-    return nsh_parser_parse_expr(parser);
+    return nsh_parser_parse_expr(parser, 100);
 }
