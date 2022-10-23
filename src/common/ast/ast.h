@@ -5,7 +5,14 @@
 
 #include "../exec/command.h"
 
+enum nsh_ast_type {
+    nsh_ast_type_none,
+    nsh_ast_type_command,
+    nsh_ast_type_pipe
+};
+
 nsh_class(nsh_ast, {
+    enum   nsh_ast_type  type;
     struct nsh_command*  command;
     struct nsh_ast*      left;
     struct nsh_ast*      right;

@@ -4,7 +4,7 @@
 #include "../defs.h"
 
 struct nsh {
-    
+    bool is_running;
 };
 
 void nsh_create(struct nsh* nsh);

@@ -7,7 +7,7 @@ struct reader {
     char*  ptr;
 };
 
-void reader_create(struct reader* reader, char* ptr);
+void reader_create(struct reader* reader, const char* ptr);
 void reader_destroy(struct reader* reader);
 
 bool reader_has(struct reader* reader);

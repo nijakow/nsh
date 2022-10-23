@@ -1,7 +1,7 @@
 #include "reader.h"
 
-void reader_create(struct reader* reader, char* ptr) {
-    reader->ptr = ptr;
+void reader_create(struct reader* reader, const char* ptr) {
+    reader->ptr = (char*) ptr;
 }
 
 void reader_destroy(struct reader* reader) {

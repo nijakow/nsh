@@ -13,6 +13,9 @@ void nsh_parser_destroy(struct nsh_parser* parser) {
 
 static bool nsh_parser_read_word_into(struct nsh_parser* parser, struct stringbuilder* sb) {
     reader_skip_whitespaces(parser->reader);
+
+    if (reader_is_any(parser->reader, "|<>")) return false;
+
     while (reader_has(parser->reader) && !reader_is_space(parser->reader)) {
         stringbuilder_append_char(sb, reader_get_and_advance(parser->reader));
     }
@@ -46,8 +49,10 @@ static nsh_ast* nsh_parser_parse_simple_expr(struct nsh_parser* parser) {
         } else if (reader_checks(parser->reader, "2>&1")) {
             nsh_command_stderr_into_stdout(command);
         } else {
-            nsh_parser_read_word_into(parser, &sb);
-            nsh_command_add_argv(command, stringbuilder_get_static(&sb));
+            if (nsh_parser_read_word_into(parser, &sb))
+                nsh_command_add_argv(command, stringbuilder_get_static(&sb));
+            else
+                break;
         }
     }
 
@@ -66,9 +71,10 @@ static struct nsh_ast* nsh_parser_parse_expr(struct nsh_parser* parser) {
         if (reader_checks(parser->reader, "|")) expr = nsh_ast_new_pipe(expr, nsh_parser_parse_expr(parser));
         else break;
     }
+
+    return expr;
 }
 
-bool nsh_parser_parse(struct nsh_parser* parser, struct nsh_program* program) {
-    // TODO
-    return false;
+struct nsh_ast* nsh_parser_parse(struct nsh_parser* parser) {
+    return nsh_parser_parse_expr(parser);
 }
