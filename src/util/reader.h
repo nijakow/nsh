@@ -13,13 +13,18 @@ void reader_destroy(struct reader* reader);
 bool reader_has(struct reader* reader);
 char reader_get(struct reader* reader);
 void reader_advance(struct reader* reader);
+char reader_get_and_advance(struct reader* reader);
 
 bool reader_is(struct reader* reader, char c);
 bool reader_is_any(struct reader* reader, const char* c);
+bool reader_is_space(struct reader* reader);
 
 bool reader_check(struct reader* reader, char c);
 bool reader_check_any(struct reader* reader, const char* c);
+bool reader_check_space(struct reader* reader);
 
 bool reader_checks(struct reader* reader, const char* str);
+
+void reader_skip_whitespaces(struct reader* reader);
 
 #endif

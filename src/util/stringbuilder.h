@@ -12,6 +12,8 @@ struct stringbuilder {
 void stringbuilder_create(struct stringbuilder* sb);
 void stringbuilder_destroy(struct stringbuilder* sb);
 
+void stringbuilder_clear(struct stringbuilder* sb);
+
 void stringbuilder_append_char(struct stringbuilder* sb, char c);
 void stringbuilder_append_cstr(struct stringbuilder* sb, const char* str);
 

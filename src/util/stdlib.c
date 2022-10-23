@@ -13,12 +13,37 @@ void nsh_free(void* ptr) {
         free(ptr);
 }
 
+
+void nsh_free_charpp(char** ptr) {
+    size_t  index;
+
+    if (ptr == NULL) return;
+
+    for (index = 0; ptr[index] != NULL; index++)
+        nsh_free(ptr[index]);
+    nsh_free(ptr);
+}
+
+
 char* nsh_strdup(const char* str) {
     return strdup(str);
 }
 
 
+typedef void (*nsh_new_func)(void*);
 typedef void (*nsh_del_func)(void*);
+
+void* nsh_new_impl(void* func, size_t size) {
+    void*  ptr;
+
+    ptr = nsh_malloc(size);
+
+    if (ptr != NULL) {
+        ((nsh_new_func) func)(ptr);
+    }
+
+    return ptr;
+}
 
 void nsh_delete(void* ptr, void* func) {
     if (ptr != NULL && func != NULL)

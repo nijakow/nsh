@@ -1,5 +1,3 @@
-#include "stdlib.h"
-
 #include "stringbuilder.h"
 
 
@@ -29,6 +27,10 @@ void stringbuilder_destroy(struct stringbuilder* sb) {
     if (sb->buffer != NULL) nsh_free(sb->buffer);
 }
 
+void stringbuilder_clear(struct stringbuilder* sb) {
+    sb->fill = 0;
+}
+
 void stringbuilder_append_char(struct stringbuilder* sb, char c) {
     if (!stringbuilder_ensure_space(sb, sb->fill + 2))
         return;
@@ -44,5 +46,5 @@ void stringbuilder_append_cstr(struct stringbuilder* sb, const char* str) {
 }
 
 const char* stringbuilder_get_static(struct stringbuilder* sb) {
-    return (sb->buffer == NULL) ? "" : sb->buffer;
+    return (sb->buffer == NULL || sb->fill == 0) ? "" : sb->buffer;
 }

@@ -17,7 +17,16 @@ char reader_get(struct reader* reader) {
 }
 
 void reader_advance(struct reader* reader) {
-    reader->ptr++;
+    if (reader_has(reader))
+        reader->ptr++;
+}
+
+char reader_get_and_advance(struct reader* reader) {
+    char c;
+    
+    c = reader_get(reader);
+    reader_advance(reader);
+    return c;
 }
 
 bool reader_is(struct reader* reader, char c) {
@@ -28,12 +37,17 @@ bool reader_is_any(struct reader* reader, const char* c) {
     size_t  index;
 
     for (index = 0; c[index] != '\0'; index++) {
-        if (reader_get(reader) == c[index])
+        if (reader_is(reader, c[index]))
             return true;
     }
 
     return false;
 }
+
+bool reader_is_space(struct reader* reader) {
+    return reader_is_any(reader, " \t\n\r");
+}
+
 
 bool reader_check(struct reader* reader, char c) {
     if (reader_is(reader, c)) {
@@ -51,7 +65,19 @@ bool reader_check_any(struct reader* reader, const char* c) {
     return false;
 }
 
+bool reader_check_space(struct reader* reader) {
+    if (reader_is_space(reader)) {
+        reader_advance(reader);
+        return true;
+    }
+    return false;
+}
+
 bool reader_checks(struct reader* reader, const char* str) {
     // TODO
     return false;
+}
+
+void reader_skip_whitespaces(struct reader* reader) {
+    while (reader_check_space(reader));
 }
