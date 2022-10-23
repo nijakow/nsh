@@ -5,13 +5,13 @@
 
 #include "../exec/command.h"
 
-struct nsh_ast {
-    struct command*  command;
-    struct nsh_ast*  left;
-    struct nsh_ast*  right;
-};
+nsh_class(nsh_ast, {
+    struct nsh_command*  command;
+    struct nsh_ast*      left;
+    struct nsh_ast*      right;
+});
 
-void nsh_ast_create(struct nsh_ast* ast);
-void nsh_ast_destroy(struct nsh_ast* ast);
+struct nsh_ast*  nsh_ast_new_command(struct nsh_command* command);
+struct nsh_ast*  nsh_ast_new_pipe(struct nsh_ast* left, struct nsh_ast* right);
 
 #endif

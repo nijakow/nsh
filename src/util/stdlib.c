@@ -45,7 +45,7 @@ void* nsh_new_impl(void* func, size_t size) {
     return ptr;
 }
 
-void nsh_delete(void* ptr, void* func) {
+void nsh_delete_impl(void* func, void* ptr) {
     if (ptr != NULL && func != NULL)
         ((nsh_del_func) func)(ptr);
     nsh_free(ptr);

@@ -1,3 +1,4 @@
+#include "../common/ast/ast.h"
 #include "../common/exec/command.h"
 
 #include "parser.h"
@@ -18,11 +19,11 @@ static bool nsh_parser_read_word_into(struct nsh_parser* parser, struct stringbu
     return false;
 }
 
-static struct nsh_ast* nsh_parser_parse_expr(struct nsh_parser* parser) {
+static nsh_ast* nsh_parser_parse_simple_expr(struct nsh_parser* parser) {
     struct stringbuilder  sb;
     struct nsh_command*   command;
 
-    // TODO: Allocate and initialize command
+    command = nsh_command_new();
 
     stringbuilder_create(&sb);
 
@@ -52,9 +53,19 @@ static struct nsh_ast* nsh_parser_parse_expr(struct nsh_parser* parser) {
 
     stringbuilder_destroy(&sb);
 
-    // TODO: Create an AST for the command
+    return nsh_ast_new_command(command);
+}
 
-    return NULL;
+static struct nsh_ast* nsh_parser_parse_expr(struct nsh_parser* parser) {
+    struct nsh_ast*  expr;
+
+    expr = nsh_parser_parse_simple_expr(parser);
+
+    while (true) {
+        reader_skip_whitespaces(parser->reader);
+        if (reader_checks(parser->reader, "|")) expr = nsh_ast_new_pipe(expr, nsh_parser_parse_expr(parser));
+        else break;
+    }
 }
 
 bool nsh_parser_parse(struct nsh_parser* parser, struct nsh_program* program) {
