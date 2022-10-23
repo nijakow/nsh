@@ -8,6 +8,8 @@
 #include <string.h>
 #include <signal.h>
 
-#include "util/stdlib.h"
+#ifndef NSH_UTIL_STDLIB_H
+# include "util/stdlib.h"
+#endif
 
 #endif
