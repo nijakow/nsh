@@ -16,6 +16,10 @@ void nsh_command_add_argv(struct nsh_command* command, const char* arg) {
     // TODO
 }
 
-void nsh_command_stderr_into_stdout(struct nsh_command* command) {
+void nsh_command_set_stderr_into_stdout(struct nsh_command* command) {
+    // TODO
+}
+
+void nsh_command_set_detached(struct nsh_command* command) {
     // TODO
 }
