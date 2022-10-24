@@ -55,7 +55,7 @@ static nsh_ast* nsh_parser_parse_command(struct nsh_parser* parser) {
             nsh_command_add_redir(command, nsh_redirection_type_output_file, stringbuilder_get_static(&sb));
         } else if (reader_checks(parser->reader, "2>&1")) {
             nsh_command_set_stderr_into_stdout(command);
-        } else if (!reader_checks(parser->reader, "&&") && reader_checks(parser->reader, "&")) {
+        } else if (!reader_iss(parser->reader, "&&") && reader_checks(parser->reader, "&")) {
             nsh_command_set_detached(command);
         } else {
             if (nsh_parser_read_word_into(parser, &sb))

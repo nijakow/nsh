@@ -18,11 +18,11 @@ char reader_get_and_advance(struct reader* reader);
 bool reader_is(struct reader* reader, char c);
 bool reader_is_any(struct reader* reader, const char* c);
 bool reader_is_space(struct reader* reader);
+bool reader_iss(struct reader* reader, const char* str);
 
 bool reader_check(struct reader* reader, char c);
 bool reader_check_any(struct reader* reader, const char* c);
 bool reader_check_space(struct reader* reader);
-
 bool reader_checks(struct reader* reader, const char* str);
 
 void reader_skip_whitespaces(struct reader* reader);

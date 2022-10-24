@@ -48,6 +48,13 @@ bool reader_is_space(struct reader* reader) {
     return reader_is_any(reader, " \t\n\r");
 }
 
+bool reader_iss(struct reader* reader, const char* str) {
+    size_t  index;
+
+    for (index = 0; str[index] != '\0' && str[index] == reader->ptr[index]; index++);
+    return (str[index] == '\0');
+}
+
 
 bool reader_check(struct reader* reader, char c) {
     if (reader_is(reader, c)) {
