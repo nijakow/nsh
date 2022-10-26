@@ -49,7 +49,7 @@ void nsh_piper_open_new_pipe(struct nsh_piper* piper) {
 void nsh_piper_rollover(struct nsh_piper* piper) {
     nsh_piper_safe_assign(&piper->in, piper->next_in);
     nsh_piper_safe_assign(&piper->out, NSH_STDOUT_FD);
-    nsh_piper_safe_assign(&piper->next_in, NSH_STDIN_FD);
+    piper->next_in = NSH_STDIN_FD;  // Direct assignment to avoid closing piper->in
 }
 
 void nsh_piper_reset(struct nsh_piper* piper) {
