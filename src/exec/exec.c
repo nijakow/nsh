@@ -41,10 +41,20 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
     return true;
 }
 
+static bool nsh_exec_ast_semicolon(struct nsh_exec* exec, struct nsh_ast* ast) {
+    if (nsh_exec_ast_command(exec, nsh_ast_get_left(ast))) {
+        nsh_exec_wait(exec);
+        nsh_exec_ast_command(exec, nsh_ast_get_right(ast));
+        return true;
+    }
+    return false;
+}
+
 bool nsh_exec_ast(struct nsh_exec* exec, struct nsh_ast* ast) {
     switch (nsh_ast_get_type(ast)) {
         case nsh_ast_type_none: return true;
         case nsh_ast_type_command: return nsh_exec_ast_command(exec, ast);
+        case nsh_ast_type_semicolon: return nsh_exec_ast_semicolon(exec, ast);
         default: return false;
     }
 }
