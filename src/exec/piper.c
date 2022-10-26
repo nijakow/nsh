@@ -40,3 +40,22 @@ void nsh_piper_destroy(struct nsh_piper* piper) {
     nsh_piper_safe_close(piper->out);
     nsh_piper_safe_close(piper->next_in);
 }
+
+
+void nsh_piper_open_new_pipe(struct nsh_piper* piper) {
+    nsh_piper_safe_pipe(&piper->out, &piper->next_in);
+}
+
+void nsh_piper_rollover(struct nsh_piper* piper) {
+    nsh_piper_safe_assign(&piper->in, piper->next_in);
+    nsh_piper_safe_assign(&piper->out, NSH_STDOUT_FD);
+    nsh_piper_safe_assign(&piper->next_in, NSH_STDIN_FD);
+}
+
+void nsh_piper_redirect_input(struct nsh_piper* piper, fd_t fd) {
+    nsh_piper_safe_assign(&piper->in, fd);
+}
+
+void nsh_piper_redirect_output(struct nsh_piper* piper, fd_t fd) {
+    nsh_piper_safe_assign(&piper->out, fd);
+}

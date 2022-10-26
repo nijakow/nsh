@@ -12,4 +12,10 @@ struct nsh_piper {
 void nsh_piper_create(struct nsh_piper* piper);
 void nsh_piper_destroy(struct nsh_piper* piper);
 
+void nsh_piper_open_new_pipe(struct nsh_piper* piper);
+void nsh_piper_rollover(struct nsh_piper* piper);
+
+void nsh_piper_redirect_input(struct nsh_piper* piper, fd_t fd);
+void nsh_piper_redirect_output(struct nsh_piper* piper, fd_t fd);
+
 #endif
