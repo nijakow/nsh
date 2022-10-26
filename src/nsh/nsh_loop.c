@@ -50,6 +50,8 @@ void nsh_loop(struct nsh* nsh) {
         fflush(stdout);
         if (fgets(input_buffer, sizeof(input_buffer), stdin) != NULL) {
             nsh_process_command(nsh, input_buffer);
+        } else {
+            nsh_halt(nsh);
         }
     }
 }
