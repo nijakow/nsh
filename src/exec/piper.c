@@ -58,6 +58,18 @@ void nsh_piper_reset(struct nsh_piper* piper) {
     nsh_piper_safe_assign(&piper->next_in, NSH_STDIN_FD);
 }
 
+fd_t nsh_piper_get_input_fd(struct nsh_piper* piper) {
+    return piper->in;
+}
+
+fd_t nsh_piper_get_output_fd(struct nsh_piper* piper) {
+    return piper->out;
+}
+
+void nsh_piper_setup_task(struct nsh_piper* piper, struct nsh_task* task) {
+    nsh_task_set_io_fds(task, piper->in, piper->out);
+}
+
 void nsh_piper_redirect_input(struct nsh_piper* piper, fd_t fd) {
     nsh_piper_safe_assign(&piper->in, fd);
 }

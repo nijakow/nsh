@@ -31,6 +31,8 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
         for (index = 1; index < nsh_command_get_argv_count(command); index++)
             nsh_task_add_argv(&task, nsh_command_get_argv(command, index));
         
+        nsh_piper_setup_task(&exec->piper, &task);
+
         if (!nsh_task_perform(&task, &exec->waitset)) {
             // TODO
         } else {
