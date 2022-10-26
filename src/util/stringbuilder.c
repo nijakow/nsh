@@ -52,3 +52,7 @@ void stringbuilder_append_cstr(struct stringbuilder* sb, const char* str) {
 const char* stringbuilder_get_static(struct stringbuilder* sb) {
     return (sb->buffer == NULL || sb->fill == 0) ? "" : sb->buffer;
 }
+
+char* stringbuilder_get(struct stringbuilder* sb) {
+    return nsh_strdup(stringbuilder_get_static(sb));
+}

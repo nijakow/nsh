@@ -80,4 +80,11 @@ bool                 nsh_wait_for(pid_t pid);
 void nsh_execve(const char* executable, char*const* argv, char*const* envp);
 void nsh_exit(int code);
 
+
+/*
+ *     F i l e   S y s t e m   S t u f f
+ */
+
+bool nsh_file_is_executable(const char* path);
+
 #endif

@@ -18,5 +18,6 @@ void stringbuilder_append_char(struct stringbuilder* sb, char c);
 void stringbuilder_append_cstr(struct stringbuilder* sb, const char* str);
 
 const char* stringbuilder_get_static(struct stringbuilder* sb);
+      char* stringbuilder_get(struct stringbuilder* sb);
 
 #endif

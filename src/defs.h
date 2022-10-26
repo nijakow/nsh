@@ -9,6 +9,7 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 
 #ifndef NSH_UTIL_STDLIB_H
 # include "util/stdlib.h"

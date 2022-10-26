@@ -117,3 +117,10 @@ void nsh_execve(const char* executable, char*const* argv, char*const* envp) {
 void nsh_exit(int code) {
     exit(code);
 }
+
+
+bool nsh_file_is_executable(const char* path) {
+    struct stat  st;
+
+    return ((stat(path, &st) == 0) && st.st_mode & S_IXUSR);
+}
