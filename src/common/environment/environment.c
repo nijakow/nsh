@@ -8,6 +8,13 @@ void nsh_environment_destroy(struct nsh_environment* env) {
     charpp_destroy(&env->bindings);
 }
 
+void nsh_environment_add_all(struct nsh_environment* env, char** envp) {
+    size_t  index;
+
+    for (index = 0; envp[index] != NULL; index++)
+        charpp_append(&env->bindings, envp[index]);
+}
+
 const char* nsh_environment_lookup(struct nsh_environment* env, const char* key, const char* default_val) {
     size_t       entry;
     size_t       index;
@@ -47,4 +54,8 @@ void nsh_environment_put(struct nsh_environment* env, const char* value) {
     }
 
     charpp_append(&env->bindings, value);
+}
+
+char *const* nsh_environment_get_static(struct nsh_environment* env) {
+    return charpp_get_static(&env->bindings);
 }
