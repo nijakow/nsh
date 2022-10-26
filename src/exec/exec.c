@@ -14,7 +14,8 @@ void nsh_exec_destroy(struct nsh_exec* exec) {
 
 static bool nsh_exec_lookup_path(struct nsh_exec* exec, const char* pathname, char** result) {
     // TODO
-    return nsh_strdup("/bin/ls");
+    *result = nsh_strdup("/bin/ls");
+    return true;
 }
 
 

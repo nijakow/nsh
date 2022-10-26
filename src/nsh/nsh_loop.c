@@ -20,16 +20,26 @@ static bool nsh_parse_command(struct nsh* nsh, const char* cmd, struct nsh_ast**
 }
 
 static bool nsh_run_command(struct nsh* nsh, struct nsh_ast* ast) {
-    nsh_ast_dump(ast);
+    struct nsh_exec  exec;
+    bool             result;
 
-    return true;
+    nsh_exec_create(&exec);
+    result = nsh_exec_ast(&exec, ast);
+    nsh_exec_destroy(&exec);
+
+    return result;
 }
 
 static bool nsh_process_command(struct nsh* nsh, const char* cmd) {
     struct nsh_ast*  ast;
+    bool             result;
 
-    return nsh_parse_command(nsh, cmd, &ast)
-        && nsh_run_command(nsh, ast);
+    result = nsh_parse_command(nsh, cmd, &ast)
+          && nsh_run_command(nsh, ast);
+    
+    if (ast != NULL) nsh_ast_delete(ast);
+
+    return result;
 }
 
 void nsh_loop(struct nsh* nsh) {
