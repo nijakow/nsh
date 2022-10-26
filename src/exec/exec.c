@@ -1,7 +1,8 @@
 #include "exec.h"
 
 
-void nsh_exec_create(struct nsh_exec* exec) {
+void nsh_exec_create(struct nsh_exec* exec, struct nsh_sherlock* sherlock) {
+    exec->sherlock = sherlock;
     nsh_waitset_create(&exec->waitset);
     nsh_piper_create(&exec->piper);
 }
@@ -12,13 +13,6 @@ void nsh_exec_destroy(struct nsh_exec* exec) {
 }
 
 
-static bool nsh_exec_lookup_path(struct nsh_exec* exec, const char* pathname, char** result) {
-    // TODO
-    *result = nsh_strdup(pathname);
-    return true;
-}
-
-
 static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
     struct nsh_task      task;
     struct nsh_command*  command;
@@ -26,7 +20,7 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
 
     command = nsh_ast_get_command(ast);
 
-    if (!nsh_exec_lookup_path(exec, nsh_command_get_name(command), &path))
+    if (!nsh_sherlock_lookup(exec->sherlock, nsh_command_get_name(command), &path))
         return false;
 
     nsh_task_create(&task, path);

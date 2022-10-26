@@ -2,9 +2,11 @@
 #define NSH_NSH_H
 
 #include "../defs.h"
+#include "../sherlock/sherlock.h"
 
 struct nsh {
-    bool is_running;
+    struct nsh_sherlock  sherlock;
+    bool                 is_running;
 };
 
 void nsh_create(struct nsh* nsh);

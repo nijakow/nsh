@@ -23,7 +23,7 @@ static bool nsh_run_command(struct nsh* nsh, struct nsh_ast* ast) {
     struct nsh_exec  exec;
     bool             result;
 
-    nsh_exec_create(&exec);
+    nsh_exec_create(&exec, &nsh->sherlock);
     result = nsh_exec_ast(&exec, ast);
     nsh_exec_wait(&exec);
     nsh_exec_destroy(&exec);

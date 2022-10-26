@@ -1,6 +1,7 @@
 #include "nsh.h"
 
 void nsh_create(struct nsh* nsh) {
+    nsh_sherlock_create(&nsh->sherlock);
     nsh->is_running = true;
 }
 
