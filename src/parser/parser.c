@@ -15,7 +15,13 @@ void nsh_parser_destroy(struct nsh_parser* parser) {
 
 }
 
-static bool nsh_parser_read_word_into(struct nsh_parser* parser, struct stringbuilder* sb) {
+static void nsh_parser_read_quoted(struct nsh_parser* parser, struct stringbuilder* sb, char quote) {
+    while (reader_has(parser->reader) && !reader_check(parser->reader, quote)) {
+        stringbuilder_append_char(sb, reader_get_and_advance(parser->reader));
+    }
+}
+
+static bool nsh_parser_read_word(struct nsh_parser* parser, struct stringbuilder* sb) {
     bool result;
 
     result = false;
@@ -23,7 +29,9 @@ static bool nsh_parser_read_word_into(struct nsh_parser* parser, struct stringbu
     reader_skip_whitespaces(parser->reader);
 
     while (reader_has(parser->reader) && !reader_is_space(parser->reader) && !reader_is_any(parser->reader, "|<>&;(){}")) {
-        stringbuilder_append_char(sb, reader_get_and_advance(parser->reader));
+             if (reader_check(parser->reader, '\"')) nsh_parser_read_quoted(parser, sb, '\"');
+        else if (reader_check(parser->reader, '\'')) nsh_parser_read_quoted(parser, sb, '\'');
+        else                                         stringbuilder_append_char(sb, reader_get_and_advance(parser->reader));
         result = true;
     }
 
@@ -48,23 +56,23 @@ static nsh_ast* nsh_parser_parse_command(struct nsh_parser* parser) {
         if (!reader_has(parser->reader)) break;
 
         if (reader_checks(parser->reader, "<<")) {
-            nsh_parser_read_word_into(parser, &sb);
+            nsh_parser_read_word(parser, &sb);
             nsh_command_add_redir(command, nsh_redirection_type_heredoc, stringbuilder_get_static(&sb));
         } else if (reader_checks(parser->reader, "<")) {
-            nsh_parser_read_word_into(parser, &sb);
+            nsh_parser_read_word(parser, &sb);
             nsh_command_add_redir(command, nsh_redirection_type_input_file, stringbuilder_get_static(&sb));
         } else if (reader_checks(parser->reader, ">>")) {
-            nsh_parser_read_word_into(parser, &sb);
+            nsh_parser_read_word(parser, &sb);
             nsh_command_add_redir(command, nsh_redirection_type_append_file, stringbuilder_get_static(&sb));
         } else if (reader_checks(parser->reader, ">")) {
-            nsh_parser_read_word_into(parser, &sb);
+            nsh_parser_read_word(parser, &sb);
             nsh_command_add_redir(command, nsh_redirection_type_output_file, stringbuilder_get_static(&sb));
         } else if (reader_checks(parser->reader, "2>&1")) {
             nsh_command_set_stderr_into_stdout(command);
         } else if (!reader_iss(parser->reader, "&&") && reader_checks(parser->reader, "&")) {
             nsh_command_set_detached(command);
         } else {
-            if (!nsh_parser_read_word_into(parser, &sb))
+            if (!nsh_parser_read_word(parser, &sb))
                 break;
             else {
                 nsh_command_add_argv(command, stringbuilder_get_static(&sb));
