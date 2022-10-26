@@ -106,6 +106,10 @@ enum nsh_fork_result nsh_fork(pid_t* pid) {
     else                return nsh_fork_result_i_am_child;
 }
 
+bool nsh_wait_for(pid_t pid) {
+    return waitpid(pid, NULL, 0) >= 0;
+}
+
 void nsh_execve(const char* executable, char*const* argv, char*const* envp) {
     execve(executable, argv, envp);
 }

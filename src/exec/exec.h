@@ -6,15 +6,18 @@
 #include "../common/ast/ast.h"
 
 #include "piper.h"
+#include "task.h"
 
 
 struct nsh_exec {
-    struct nsh_piper  piper;
+    struct nsh_waitset  waitset;
+    struct nsh_piper    piper;
 };
 
 void nsh_exec_create(struct nsh_exec* exec);
 void nsh_exec_destroy(struct nsh_exec* exec);
 
 bool nsh_exec_ast(struct nsh_exec* exec, struct nsh_ast* ast);
+void nsh_exec_wait(struct nsh_exec* exec);
 
 #endif

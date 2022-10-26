@@ -75,9 +75,9 @@ enum nsh_fork_result {
 };
 
 enum nsh_fork_result nsh_fork(pid_t* pid);
+bool                 nsh_wait_for(pid_t pid);
 
 void nsh_execve(const char* executable, char*const* argv, char*const* envp);
-
 void nsh_exit(int code);
 
 #endif

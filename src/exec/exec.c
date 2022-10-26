@@ -1,14 +1,14 @@
-#include "task.h"
-
 #include "exec.h"
 
 
 void nsh_exec_create(struct nsh_exec* exec) {
+    nsh_waitset_create(&exec->waitset);
     nsh_piper_create(&exec->piper);
 }
 
 void nsh_exec_destroy(struct nsh_exec* exec) {
     nsh_piper_destroy(&exec->piper);
+    nsh_waitset_destroy(&exec->waitset);
 }
 
 
@@ -30,7 +30,7 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
         return false;
 
     nsh_task_create(&task, path);
-    if (!nsh_task_perform(&task)) {
+    if (!nsh_task_perform(&task, &exec->waitset)) {
         // TODO
     } else {
         // TODO
@@ -46,4 +46,8 @@ bool nsh_exec_ast(struct nsh_exec* exec, struct nsh_ast* ast) {
         case nsh_ast_type_command: return nsh_exec_ast_command(exec, ast);
         default: return false;
     }
+}
+
+void nsh_exec_wait(struct nsh_exec* exec) {
+    nsh_waitset_wait_for_all(&exec->waitset);
 }

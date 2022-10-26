@@ -1,6 +1,30 @@
 #include "task.h"
 
 
+void nsh_waitset_create(struct nsh_waitset* ws) {
+    ws->fill = 0;
+}
+
+void nsh_waitset_destroy(struct nsh_waitset* ws) {
+
+}
+
+bool nsh_waitset_insert(struct nsh_waitset* ws, pid_t pid) {
+    if (ws->fill < NSH_WAITSET_MAX) {
+        ws->pids[ws->fill++] = pid;
+        return true;
+    }
+    return false;
+}
+
+void nsh_waitset_wait_for_all(struct nsh_waitset* ws) {
+    while (ws->fill > 0) {
+        ws->fill--;
+        nsh_wait_for(ws->pids[ws->fill]);
+    }
+}
+
+
 void nsh_task_create(struct nsh_task* task, const char* executable) {
     task->executable = nsh_strdup(executable);
 
@@ -58,13 +82,14 @@ static void nsh_task_do_child_stuff(struct nsh_task* task) {
     nsh_exit(127);
 }
 
-bool nsh_task_perform(struct nsh_task* task) {
+bool nsh_task_perform(struct nsh_task* task, struct nsh_waitset* ws) {
     pid_t  pid;
 
     switch (nsh_fork(&pid))
     {
         case nsh_fork_result_error:       return false;
-        case nsh_fork_result_i_am_parent: return true;
+        case nsh_fork_result_i_am_parent: nsh_waitset_insert(ws, pid);
+                                          return true;
         case nsh_fork_result_i_am_child:  nsh_task_do_child_stuff(task);
                                           return true;
     }
