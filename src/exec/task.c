@@ -52,12 +52,13 @@ static void nsh_task_do_child_stuff(struct nsh_task* task) {
 bool nsh_task_perform(struct nsh_task* task) {
     pid_t  pid;
 
-    nsh_fork(&pid);
+    switch (nsh_fork(&pid))
+    {
+        case nsh_fork_result_error:       return false;
+        case nsh_fork_result_i_am_parent: return true;
+        case nsh_fork_result_i_am_child:  nsh_task_do_child_stuff(task);
+                                          return true;
+    }
 
-         if (pid <  0) return false;
-    else if (pid == 0) return true;
-
-    nsh_task_do_child_stuff(task);
-
-    return true;
+    return false;
 }
