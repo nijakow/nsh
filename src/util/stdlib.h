@@ -43,6 +43,8 @@ typedef int fd_t;
 #define NSH_INVALID_FD -1
 
 void nsh_close(fd_t fd);
+bool nsh_dup(fd_t fd, fd_t* into);
+bool nsh_dup2_from_into(fd_t from, fd_t to);
 
 struct nsh_pipe {
     fd_t  in;

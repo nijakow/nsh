@@ -57,6 +57,17 @@ void nsh_close(fd_t fd) {
         close(fd);
 }
 
+
+bool nsh_dup(fd_t fd, fd_t* into) {
+    *into = dup(fd);
+    return *into >= 0;
+}
+
+bool nsh_dup2_from_into(fd_t from, fd_t to) {
+    return dup2(from, to) >= 0;
+}
+
+
 bool nsh_pipe_create(struct nsh_pipe* the_pipe) {
     int  fds[2];
 
