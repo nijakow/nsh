@@ -9,7 +9,7 @@ static bool stringbuilder_ensure_space(struct stringbuilder* sb, size_t size) {
     if (size < sb->alloc * 2)
         size = sb->alloc * 2;
 
-    new_buffer = nsh_realloc(sb->buffer, size);
+    new_buffer = nsh_realloc(sb->buffer, size * sizeof(char));
 
     if (new_buffer != NULL) {
         sb->buffer = new_buffer;

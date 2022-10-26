@@ -18,7 +18,7 @@ static bool charpp_ensure_space(struct charpp* charpp, size_t size) {
     if (size < charpp->alloc * 2)
         size = charpp->alloc * 2;
     
-    new_data = nsh_realloc(charpp->data, size);
+    new_data = nsh_realloc(charpp->data, size * sizeof(char*));
 
     if (new_data != NULL) {
         charpp->data  = new_data;
