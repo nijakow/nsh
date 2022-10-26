@@ -46,6 +46,10 @@ typedef int fd_t;
 #define NSH_STDOUT_FD   STDOUT_FILENO
 #define NSH_STDERR_FD   STDERR_FILENO
 
+bool nsh_open_reading(const char* path, fd_t* fd);
+bool nsh_open_writing(const char* path, fd_t* fd);
+bool nsh_open_writing_append(const char* path, fd_t* fd);
+
 void nsh_close(fd_t fd);
 
 bool nsh_dup(fd_t fd, fd_t* into);

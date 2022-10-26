@@ -7,8 +7,9 @@ void nsh_task_create(struct nsh_task* task, const char* executable) {
     charpp_create(&task->argv);
     charpp_create(&task->envp);
 
-    task->in_fd  = NSH_INVALID_FD;
-    task->out_fd = NSH_INVALID_FD;
+    task->fds.in  = NSH_INVALID_FD;
+    task->fds.out = NSH_INVALID_FD;
+    task->fds.err = NSH_INVALID_FD;
 
     nsh_task_add_argv(task, executable);
 }
@@ -31,11 +32,15 @@ void nsh_task_add_envp(struct nsh_task* task, const char* str) {
 
 
 void nsh_task_set_input_fd(struct nsh_task* task, fd_t fd) {
-    task->in_fd = fd;
+    task->fds.in = fd;
 }
 
 void nsh_task_set_output_fd(struct nsh_task* task, fd_t fd) {
-    task->out_fd = fd;
+    task->fds.out = fd;
+}
+
+void nsh_task_set_error_fd(struct nsh_task* task, fd_t fd) {
+    task->fds.err = fd;
 }
 
 void nsh_task_set_io_fds(struct nsh_task* task, fd_t in_fd, fd_t out_fd) {
@@ -45,6 +50,10 @@ void nsh_task_set_io_fds(struct nsh_task* task, fd_t in_fd, fd_t out_fd) {
 
 
 static void nsh_task_do_child_stuff(struct nsh_task* task) {
+    if (task->fds.in  != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.in, NSH_STDOUT_FD);
+    if (task->fds.out != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.out, NSH_STDOUT_FD);
+    if (task->fds.err != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.err, NSH_STDOUT_FD);
+
     nsh_execve(task->executable, charpp_get_static(&task->argv), charpp_get_static(&task->envp));
     nsh_exit(127);
 }

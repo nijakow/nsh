@@ -11,8 +11,11 @@ struct nsh_task {
     struct charpp  argv;
     struct charpp  envp;
 
-    fd_t           in_fd;
-    fd_t           out_fd;
+    struct {
+        fd_t        in;
+        fd_t        out;
+        fd_t        err;
+    } fds;
 };
 
 void nsh_task_create(struct nsh_task* task, const char* executable);
@@ -23,6 +26,7 @@ void nsh_task_add_envp(struct nsh_task* task, const char* str);
 
 void nsh_task_set_input_fd(struct nsh_task* task, fd_t fd);
 void nsh_task_set_output_fd(struct nsh_task* task, fd_t fd);
+void nsh_task_set_error_fd(struct nsh_task* task, fd_t fd);
 void nsh_task_set_io_fds(struct nsh_task* task, fd_t in_fd, fd_t out_fd);
 
 bool nsh_task_perform(struct nsh_task* task);

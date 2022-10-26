@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <signal.h>
+#include <fcntl.h>
 
 #ifndef NSH_UTIL_STDLIB_H
 # include "util/stdlib.h"

@@ -52,6 +52,19 @@ void nsh_delete_impl(void* func, void* ptr) {
 }
 
 
+
+bool nsh_open_reading(const char* path, fd_t* fd) {
+    return (*fd = open(path, O_RDONLY)) >= 0;
+}
+
+bool nsh_open_writing(const char* path, fd_t* fd) {
+    return (*fd = open(path, O_WRONLY)) >= 0;
+}
+
+bool nsh_open_writing_append(const char* path, fd_t* fd) {
+    return (*fd = open(path, O_WRONLY | O_APPEND)) >= 0;
+}
+
 void nsh_close(fd_t fd) {
     if (fd != NSH_INVALID_FD)
         close(fd);
