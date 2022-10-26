@@ -3,6 +3,10 @@
 
 #include "parser.h"
 
+
+static struct nsh_ast* nsh_parser_parse_full_expr(struct nsh_parser* parser);
+
+
 void nsh_parser_create(struct nsh_parser* parser, struct reader* reader) {
     parser->reader = reader;
 }
@@ -74,14 +78,14 @@ static struct nsh_ast* nsh_parser_parse_simple_expr(struct nsh_parser* parser) {
     struct nsh_ast*  ast;
 
     if (reader_checks(parser->reader, "(")) {
-        ast = nsh_parser_parse(parser);
+        ast = nsh_parser_parse_full_expr(parser);
         reader_checks(parser->reader, ")");
         return ast;
     } else if (reader_checks(parser->reader, "while ")) {
-        ast = nsh_parser_parse(parser);
+        ast = nsh_parser_parse_full_expr(parser);
         reader_skip_whitespaces(parser->reader);
         reader_checks(parser->reader, "{");
-        ast = nsh_ast_new_while(ast, nsh_parser_parse(parser));
+        ast = nsh_ast_new_while(ast, nsh_parser_parse_full_expr(parser));
         reader_skip_whitespaces(parser->reader);
         reader_checks(parser->reader, "}");
         return ast;
@@ -114,6 +118,11 @@ static struct nsh_ast* nsh_parser_parse_expr(struct nsh_parser* parser, int prec
     return expr;
 }
 
-struct nsh_ast* nsh_parser_parse(struct nsh_parser* parser) {
+static struct nsh_ast* nsh_parser_parse_full_expr(struct nsh_parser* parser) {
     return nsh_parser_parse_expr(parser, 100);
+}
+
+bool nsh_parser_parse(struct nsh_parser* parser, struct nsh_ast** ast) {
+    *ast = nsh_parser_parse_full_expr(parser);
+    return ast != NULL;
 }
