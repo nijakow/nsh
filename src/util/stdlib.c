@@ -102,8 +102,8 @@ enum nsh_fork_result nsh_fork(pid_t* pid) {
     *pid = fork();
 
          if (*pid <  0) return nsh_fork_result_error;
-    else if (*pid == 0) return nsh_fork_result_i_am_parent;
-    else                return nsh_fork_result_i_am_child;
+    else if (*pid == 0) return nsh_fork_result_i_am_child;
+    else                return nsh_fork_result_i_am_parent;
 }
 
 bool nsh_wait_for(pid_t pid) {
