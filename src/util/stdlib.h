@@ -43,6 +43,7 @@ typedef int fd_t;
 #define NSH_INVALID_FD -1
 
 void nsh_close(fd_t fd);
+
 bool nsh_dup(fd_t fd, fd_t* into);
 bool nsh_dup2_from_into(fd_t from, fd_t to);
 
@@ -53,5 +54,22 @@ struct nsh_pipe {
 
 bool nsh_pipe_create(struct nsh_pipe* pipe);
 void nsh_pipe_destroy(struct nsh_pipe* pipe);
+
+
+/*
+ *     F o r k e y   S t u f f
+ */
+
+enum nsh_fork_result {
+    nsh_fork_result_error,
+    nsh_fork_result_i_am_parent,
+    nsh_fork_result_i_am_child
+};
+
+enum nsh_fork_result nsh_fork(pid_t* pid);
+
+void nsh_execve(const char* executable, char*const* argv, char*const* envp);
+
+void nsh_exit(int code);
 
 #endif

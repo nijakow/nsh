@@ -34,3 +34,7 @@ void charpp_append(struct charpp* charpp, const char* str) {
     charpp->data[charpp->fill++] = nsh_strdup(str);
     charpp->data[charpp->fill]   = NULL;
 }
+
+char*const* charpp_get_static(struct charpp* charpp) {
+    return charpp->data;
+}

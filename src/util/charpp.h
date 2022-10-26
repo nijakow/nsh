@@ -14,4 +14,6 @@ void charpp_destroy(struct charpp* charpp);
 
 void charpp_append(struct charpp* charpp, const char* str);
 
+char*const* charpp_get_static(struct charpp* charpp);
+
 #endif

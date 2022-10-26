@@ -83,3 +83,20 @@ void nsh_pipe_destroy(struct nsh_pipe* the_pipe) {
     nsh_close(the_pipe->in);
     nsh_close(the_pipe->out);
 }
+
+
+enum nsh_fork_result nsh_fork(pid_t* pid) {
+    *pid = fork();
+
+         if (*pid <  0) return nsh_fork_result_error;
+    else if (*pid == 0) return nsh_fork_result_i_am_parent;
+    else                return nsh_fork_result_i_am_child;
+}
+
+void nsh_execve(const char* executable, char*const* argv, char*const* envp) {
+    execve(executable, argv, envp);
+}
+
+void nsh_exit(int code) {
+    exit(code);
+}
