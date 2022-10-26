@@ -17,6 +17,14 @@ static bool nsh_sherlock_lookup__with_pathvar(struct nsh_sherlock* sherlock, con
     struct stringbuilder  sb;
     size_t  index;
 
+    if (path[0] == '/' || path[0] == '.') {
+        if (nsh_sherlock_lookup__trypath(sherlock, path)) {
+            *result = nsh_strdup(path);
+            return true;
+        }
+        return false;
+    }
+
     stringbuilder_create(&sb);
     for (index = 0;; index++) {
         switch (pathvar[index]) {
