@@ -56,11 +56,26 @@ static bool nsh_exec_ast_semicolon(struct nsh_exec* exec, struct nsh_ast* ast) {
     return false;
 }
 
+static bool nsh_exec_ast_pipe(struct nsh_exec* exec, struct nsh_ast* ast) {
+    bool result;
+
+    result = false;
+
+    nsh_piper_open_new_pipe(&exec->piper);
+    if (nsh_exec_ast(exec, nsh_ast_get_left(ast))) {
+        nsh_piper_rollover(&exec->piper);
+        result = nsh_exec_ast(exec, nsh_ast_get_right(ast));
+    }
+    nsh_piper_reset(&exec->piper);
+    return result;
+}
+
 bool nsh_exec_ast(struct nsh_exec* exec, struct nsh_ast* ast) {
     switch (nsh_ast_get_type(ast)) {
         case nsh_ast_type_none: return true;
         case nsh_ast_type_command: return nsh_exec_ast_command(exec, ast);
         case nsh_ast_type_semicolon: return nsh_exec_ast_semicolon(exec, ast);
+        case nsh_ast_type_pipe: return nsh_exec_ast_pipe(exec, ast);
         default: return false;
     }
 }

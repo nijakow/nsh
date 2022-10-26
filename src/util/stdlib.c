@@ -58,7 +58,7 @@ bool nsh_open_reading(const char* path, fd_t* fd) {
 }
 
 bool nsh_open_writing(const char* path, fd_t* fd) {
-    return (*fd = open(path, O_WRONLY | O_CREAT, 0744)) >= 0;
+    return (*fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0744)) >= 0;
 }
 
 bool nsh_open_writing_append(const char* path, fd_t* fd) {
