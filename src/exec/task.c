@@ -74,9 +74,9 @@ void nsh_task_set_io_fds(struct nsh_task* task, fd_t in_fd, fd_t out_fd) {
 
 
 static void nsh_task_do_child_stuff(struct nsh_task* task) {
-    if (task->fds.in  != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.in, NSH_STDOUT_FD);
+    if (task->fds.in  != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.in, NSH_STDIN_FD);
     if (task->fds.out != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.out, NSH_STDOUT_FD);
-    if (task->fds.err != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.err, NSH_STDOUT_FD);
+    if (task->fds.err != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.err, NSH_STDERR_FD);
 
     nsh_execve(task->executable, charpp_get_static(&task->argv), charpp_get_static(&task->envp));
     nsh_exit(127);
