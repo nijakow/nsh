@@ -77,6 +77,7 @@ bool nsh_dup(fd_t fd, fd_t* into) {
 }
 
 bool nsh_dup2_from_into(fd_t from, fd_t to) {
+    if (from == to) return true;
     return dup2(from, to) >= 0;
 }
 

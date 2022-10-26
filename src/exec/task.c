@@ -81,10 +81,19 @@ void nsh_task_close_later(struct nsh_task* task, fd_t fd) {
 }
 
 
+static void nsh_task_safe_close(fd_t fd) {
+    if (fd != NSH_STDIN_FD && fd != NSH_STDOUT_FD && fd != NSH_STDERR_FD)
+        nsh_close(fd);
+}
+
 static void nsh_task_do_child_stuff(struct nsh_task* task) {
     if (task->fds.in  != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.in, NSH_STDIN_FD);
     if (task->fds.out != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.out, NSH_STDOUT_FD);
     if (task->fds.err != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.err, NSH_STDERR_FD);
+
+    nsh_task_safe_close(task->fds.in);
+    nsh_task_safe_close(task->fds.out);
+    nsh_task_safe_close(task->fds.err);
 
     nsh_closelist_close_all(&task->closelist);
 
