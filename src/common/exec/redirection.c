@@ -14,6 +14,18 @@ void nsh_redirection_destroy(struct nsh_redirection* redir) {
     nsh_redirection_delete(redir->next);
 }
 
+enum nsh_redirection_type nsh_redirection_get_type(struct nsh_redirection* redir) {
+    return redir->type;
+}
+
+const char* nsh_redirection_get_text(struct nsh_redirection* redir) {
+    return redir->text;
+}
+
+struct nsh_redirection* nsh_redirection_get_next(struct nsh_redirection* redir) {
+    return redir->next;
+}
+
 void nsh_redirection_set(struct nsh_redirection* redir, enum nsh_redirection_type type, const char* text) {
     nsh_free(redir->text);
     redir->type = type;

@@ -8,8 +8,8 @@
 #include "redirection.h"
 
 nsh_class(nsh_command, {
-    struct charpp        argv;
-    struct redirection*  redirections;
+    struct charpp            argv;
+    struct nsh_redirection*  redirections;
 });
 
 void nsh_command_add_redir(struct nsh_command* command, enum nsh_redirection_type type, const char* text);

@@ -79,5 +79,19 @@ void nsh_piper_redirect_output(struct nsh_piper* piper, fd_t fd) {
 }
 
 void nsh_piper_run_redirections(struct nsh_piper* piper, struct nsh_redirection* redir) {
-    // TODO
+    fd_t  fd;
+
+    while (redir != NULL) {
+        switch (nsh_redirection_get_type(redir)) {
+            case nsh_redirection_type_output_file: {
+                if (nsh_open_writing(nsh_redirection_get_text(redir), &fd))
+                    nsh_piper_redirect_input(piper, fd);
+                break;
+            }
+            default:
+                /* TODO: Error or Warning */
+                break;
+        }
+        redir = nsh_redirection_get_next(redir);
+    }
 }

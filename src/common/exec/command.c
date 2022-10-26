@@ -11,10 +11,10 @@ void nsh_command_destroy(struct nsh_command* command) {
 }
 
 void nsh_command_add_redir(struct nsh_command* command, enum nsh_redirection_type type, const char* text) {
-    struct redirection*  redir;
+    struct nsh_redirection*  redir;
 
     redir = nsh_redirection_quick_new(type, text);
-    
+
     if (redir != NULL) {
         if (command->redirections == NULL)
             command->redirections = redir;

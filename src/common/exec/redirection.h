@@ -17,6 +17,10 @@ nsh_class(nsh_redirection, {
     struct nsh_redirection*      next;
 });
 
+enum   nsh_redirection_type  nsh_redirection_get_type(struct nsh_redirection* redir);
+const  char*                 nsh_redirection_get_text(struct nsh_redirection* redir);
+struct nsh_redirection*      nsh_redirection_get_next(struct nsh_redirection* redir);
+
 void nsh_redirection_set(struct nsh_redirection* redir, enum nsh_redirection_type type, const char* text);
 void nsh_redirection_set_next(struct nsh_redirection* redir, struct nsh_redirection* next);
 void nsh_redirection_push(struct nsh_redirection* redir, struct nsh_redirection* next);
