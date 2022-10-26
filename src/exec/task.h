@@ -4,6 +4,7 @@
 #include "../defs.h"
 
 #include "../util/charpp.h"
+#include "../util/closelist.h"
 
 
 #define NSH_WAITSET_MAX 32
@@ -31,6 +32,8 @@ struct nsh_task {
         fd_t        out;
         fd_t        err;
     } fds;
+
+    struct nsh_closelist  closelist;
 };
 
 void nsh_task_create(struct nsh_task* task, const char* executable);
@@ -43,6 +46,7 @@ void nsh_task_set_input_fd(struct nsh_task* task, fd_t fd);
 void nsh_task_set_output_fd(struct nsh_task* task, fd_t fd);
 void nsh_task_set_error_fd(struct nsh_task* task, fd_t fd);
 void nsh_task_set_io_fds(struct nsh_task* task, fd_t in_fd, fd_t out_fd);
+void nsh_task_close_later(struct nsh_task* task, fd_t fd);
 
 bool nsh_task_perform(struct nsh_task* task, struct nsh_waitset* ws);
 

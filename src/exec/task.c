@@ -35,6 +35,8 @@ void nsh_task_create(struct nsh_task* task, const char* executable) {
     task->fds.out = NSH_INVALID_FD;
     task->fds.err = NSH_INVALID_FD;
 
+    nsh_closelist_create(&task->closelist);
+
     nsh_task_add_argv(task, executable);
 }
 
@@ -43,6 +45,8 @@ void nsh_task_destroy(struct nsh_task* task) {
 
     charpp_destroy(&task->argv);
     charpp_destroy(&task->envp);
+
+    nsh_closelist_destroy(&task->closelist);
 }
 
 
@@ -72,11 +76,17 @@ void nsh_task_set_io_fds(struct nsh_task* task, fd_t in_fd, fd_t out_fd) {
     nsh_task_set_output_fd(task, out_fd);
 }
 
+void nsh_task_close_later(struct nsh_task* task, fd_t fd) {
+    nsh_closelist_insert(&task->closelist, fd);
+}
+
 
 static void nsh_task_do_child_stuff(struct nsh_task* task) {
     if (task->fds.in  != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.in, NSH_STDIN_FD);
     if (task->fds.out != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.out, NSH_STDOUT_FD);
     if (task->fds.err != NSH_INVALID_FD) nsh_dup2_from_into(task->fds.err, NSH_STDERR_FD);
+
+    nsh_closelist_close_all(&task->closelist);
 
     nsh_execve(task->executable, charpp_get_static(&task->argv), charpp_get_static(&task->envp));
     nsh_exit(127);

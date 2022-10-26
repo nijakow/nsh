@@ -68,6 +68,8 @@ fd_t nsh_piper_get_output_fd(struct nsh_piper* piper) {
 
 void nsh_piper_setup_task(struct nsh_piper* piper, struct nsh_task* task) {
     nsh_task_set_io_fds(task, piper->in, piper->out);
+    if (piper->next_in != NSH_STDIN_FD)
+        nsh_task_close_later(task, piper->next_in);
 }
 
 void nsh_piper_redirect_input(struct nsh_piper* piper, fd_t fd) {
