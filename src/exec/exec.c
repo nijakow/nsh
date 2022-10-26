@@ -23,6 +23,8 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
 
     if (!nsh_sherlock_lookup(exec->sherlock, nsh_command_get_name(command), &path))
         return false;
+    
+    nsh_piper_run_redirections(&exec->piper, nsh_command_get_redirections(command));
 
     nsh_task_create(&task, path);
     {
@@ -44,6 +46,7 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
 static bool nsh_exec_ast_semicolon(struct nsh_exec* exec, struct nsh_ast* ast) {
     if (nsh_exec_ast(exec, nsh_ast_get_left(ast))) {
         nsh_exec_wait(exec);
+        nsh_piper_reset(&exec->piper);
         if (nsh_exec_ast(exec, nsh_ast_get_right(ast))) {
             return true;
         }

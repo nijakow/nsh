@@ -2,14 +2,25 @@
 
 void nsh_command_create(struct nsh_command* command) {
     charpp_create(&command->argv);
+    command->redirections = NULL;
 }
 
 void nsh_command_destroy(struct nsh_command* command) {
     charpp_destroy(&command->argv);
+    nsh_redirection_delete(command->redirections);
 }
 
 void nsh_command_add_redir(struct nsh_command* command, enum nsh_redirection_type type, const char* text) {
-    // TODO
+    struct redirection*  redir;
+
+    redir = nsh_redirection_quick_new(type, text);
+    
+    if (redir != NULL) {
+        if (command->redirections == NULL)
+            command->redirections = redir;
+        else
+            nsh_redirection_push(command->redirections, redir);
+    }
 }
 
 void nsh_command_add_argv(struct nsh_command* command, const char* arg) {
@@ -32,6 +43,10 @@ size_t nsh_command_get_argv_count(struct nsh_command* command) {
     return charpp_get_size(&command->argv);
 }
 
-const char*  nsh_command_get_argv(struct nsh_command* command, size_t index) {
+const char* nsh_command_get_argv(struct nsh_command* command, size_t index) {
     return charpp_get_static_at(&command->argv, index);
+}
+
+struct nsh_redirection* nsh_command_get_redirections(struct nsh_command* command) {
+    return command->redirections;
 }

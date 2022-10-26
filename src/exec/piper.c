@@ -52,10 +52,20 @@ void nsh_piper_rollover(struct nsh_piper* piper) {
     nsh_piper_safe_assign(&piper->next_in, NSH_STDIN_FD);
 }
 
+void nsh_piper_reset(struct nsh_piper* piper) {
+    nsh_piper_safe_assign(&piper->in, NSH_STDIN_FD);
+    nsh_piper_safe_assign(&piper->out, NSH_STDOUT_FD);
+    nsh_piper_safe_assign(&piper->next_in, NSH_STDIN_FD);
+}
+
 void nsh_piper_redirect_input(struct nsh_piper* piper, fd_t fd) {
     nsh_piper_safe_assign(&piper->in, fd);
 }
 
 void nsh_piper_redirect_output(struct nsh_piper* piper, fd_t fd) {
     nsh_piper_safe_assign(&piper->out, fd);
+}
+
+void nsh_piper_run_redirections(struct nsh_piper* piper, struct nsh_redirection* redir) {
+    // TODO
 }
