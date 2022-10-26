@@ -50,3 +50,25 @@ void nsh_delete_impl(void* func, void* ptr) {
         ((nsh_del_func) func)(ptr);
     nsh_free(ptr);
 }
+
+
+void nsh_close(fd_t fd) {
+    if (fd != NSH_INVALID_FD)
+        close(fd);
+}
+
+bool nsh_pipe_create(struct nsh_pipe* the_pipe) {
+    int  fds[2];
+
+    if (pipe(fds) != 0) return false;
+
+    the_pipe->in  = fds[1];
+    the_pipe->out = fds[0];
+
+    return true;
+}
+
+void nsh_pipe_destroy(struct nsh_pipe* the_pipe) {
+    nsh_close(the_pipe->in);
+    nsh_close(the_pipe->out);
+}
