@@ -28,6 +28,13 @@ static bool charpp_ensure_space(struct charpp* charpp, size_t size) {
     return false;
 }
 
+bool charpp_put(struct charpp* charpp, size_t index, const char* str) {
+    if (index >= charpp->fill) return false;
+    nsh_free(charpp->data[index]);
+    charpp->data[index] = nsh_strdup(str);
+    return true;
+}
+
 void charpp_append(struct charpp* charpp, const char* str) {
     if (!charpp_ensure_space(charpp, charpp->fill + 2))
         return;

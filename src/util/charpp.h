@@ -12,6 +12,7 @@ struct charpp {
 void charpp_create(struct charpp* charpp);
 void charpp_destroy(struct charpp* charpp);
 
+bool charpp_put(struct charpp* charpp, size_t index, const char* str);
 void charpp_append(struct charpp* charpp, const char* str);
 
 char*const* charpp_get_static(struct charpp* charpp);
