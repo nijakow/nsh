@@ -40,7 +40,11 @@ char* nsh_strdup(const char* str);
  */
 
 typedef int fd_t;
-#define NSH_INVALID_FD -1
+
+#define NSH_INVALID_FD  -1
+#define NSH_STDIN_FD    STDIN_FILENO
+#define NSH_STDOUT_FD   STDOUT_FILENO
+#define NSH_STDERR_FD   STDERR_FILENO
 
 void nsh_close(fd_t fd);
 
