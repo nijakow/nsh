@@ -42,10 +42,11 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
 }
 
 static bool nsh_exec_ast_semicolon(struct nsh_exec* exec, struct nsh_ast* ast) {
-    if (nsh_exec_ast_command(exec, nsh_ast_get_left(ast))) {
+    if (nsh_exec_ast(exec, nsh_ast_get_left(ast))) {
         nsh_exec_wait(exec);
-        nsh_exec_ast_command(exec, nsh_ast_get_right(ast));
-        return true;
+        if (nsh_exec_ast(exec, nsh_ast_get_right(ast))) {
+            return true;
+        }
     }
     return false;
 }

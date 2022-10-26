@@ -88,13 +88,21 @@ struct nsh_ast* nsh_ast_get_right(struct nsh_ast* ast) {
 
 static void nsh_ast_dump_with_depth(struct nsh_ast* ast, unsigned int depth) {
     unsigned int  index;
+    size_t        arg;
 
     if (ast->left != NULL) nsh_ast_dump_with_depth(ast->left, depth + 1);
     for (index = 0; index < depth; index++)
         printf("  ");
     printf("%p ", ast);
     switch (ast->type) {
-        case nsh_ast_type_command: printf("command"); break;
+        case nsh_ast_type_none: printf("none"); break;
+        case nsh_ast_type_command: {
+            printf("command:");
+            for (arg = 0; arg < nsh_command_get_argv_count(nsh_ast_get_command(ast)); arg++) {
+                printf(" %s", nsh_command_get_argv(nsh_ast_get_command(ast), arg));
+            }
+            break;
+        }
         case nsh_ast_type_pipe: printf("pipe"); break;
         case nsh_ast_type_semicolon: printf("semicolon"); break;
         case nsh_ast_type_and: printf("&&"); break;
