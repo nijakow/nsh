@@ -107,7 +107,7 @@ bool nsh_task_perform(struct nsh_task* task, struct nsh_waitset* ws) {
     switch (nsh_fork(&pid))
     {
         case nsh_fork_result_error:       return false;
-        case nsh_fork_result_i_am_parent: nsh_waitset_insert(ws, pid);
+        case nsh_fork_result_i_am_parent: if (ws != NULL) nsh_waitset_insert(ws, pid);
                                           return true;
         case nsh_fork_result_i_am_child:  nsh_task_do_child_stuff(task);
                                           return true;

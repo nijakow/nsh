@@ -33,7 +33,7 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
         
         nsh_piper_setup_task(&exec->piper, &task);
 
-        if (!nsh_task_perform(&task, &exec->waitset)) {
+        if (!nsh_task_perform(&task, nsh_command_is_detached(command) ? NULL : &exec->waitset)) {
             // TODO
         } else {
             // TODO

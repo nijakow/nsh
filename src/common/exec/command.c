@@ -3,6 +3,7 @@
 void nsh_command_create(struct nsh_command* command) {
     charpp_create(&command->argv);
     command->redirections = NULL;
+    command->detached     = false;
 }
 
 void nsh_command_destroy(struct nsh_command* command) {
@@ -32,7 +33,7 @@ void nsh_command_set_stderr_into_stdout(struct nsh_command* command) {
 }
 
 void nsh_command_set_detached(struct nsh_command* command) {
-    // TODO
+    command->detached = true;
 }
 
 const char* nsh_command_get_name(struct nsh_command* command) {
@@ -49,4 +50,8 @@ const char* nsh_command_get_argv(struct nsh_command* command, size_t index) {
 
 struct nsh_redirection* nsh_command_get_redirections(struct nsh_command* command) {
     return command->redirections;
+}
+
+bool nsh_command_is_detached(struct nsh_command* command) {
+    return command->detached;
 }
