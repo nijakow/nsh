@@ -16,6 +16,10 @@ void nsh_ast_destroy(struct nsh_ast* ast) {
 }
 
 
+struct nsh_ast* nsh_ast_new_none() {
+    return nsh_ast_new();
+}
+
 struct nsh_ast* nsh_ast_new_command(struct nsh_command* command) {
     struct nsh_ast*  ast;
 

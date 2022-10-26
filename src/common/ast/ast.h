@@ -22,6 +22,7 @@ nsh_class(nsh_ast, {
     struct nsh_ast*      right;
 });
 
+struct nsh_ast*  nsh_ast_new_none();
 struct nsh_ast*  nsh_ast_new_command(struct nsh_command* command);
 struct nsh_ast*  nsh_ast_new_pipe(struct nsh_ast* left, struct nsh_ast* right);
 struct nsh_ast*  nsh_ast_new_semicolon(struct nsh_ast* left, struct nsh_ast* right);

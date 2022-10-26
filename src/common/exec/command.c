@@ -1,11 +1,11 @@
 #include "command.h"
 
 void nsh_command_create(struct nsh_command* command) {
-    command->name = NULL;
+    charpp_create(&command->argv);
 }
 
 void nsh_command_destroy(struct nsh_command* command) {
-    nsh_free(command->name);
+    charpp_destroy(&command->argv);
 }
 
 void nsh_command_add_redir(struct nsh_command* command, enum nsh_redirection_type type, const char* text) {
@@ -13,7 +13,7 @@ void nsh_command_add_redir(struct nsh_command* command, enum nsh_redirection_typ
 }
 
 void nsh_command_add_argv(struct nsh_command* command, const char* arg) {
-    // TODO
+    charpp_append(&command->argv, arg);
 }
 
 void nsh_command_set_stderr_into_stdout(struct nsh_command* command) {
@@ -24,12 +24,6 @@ void nsh_command_set_detached(struct nsh_command* command) {
     // TODO
 }
 
-
 const char* nsh_command_get_name(struct nsh_command* command) {
-    return command->name;
-}
-
-void nsh_command_set_name(struct nsh_command* command, const char* name) {
-    if (command->name != NULL) nsh_free(command->name);
-    command->name = nsh_strdup(name);
+    return charpp_get_static_at(&command->argv, 0);
 }

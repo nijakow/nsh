@@ -33,7 +33,9 @@ static bool nsh_parser_read_word_into(struct nsh_parser* parser, struct stringbu
 static nsh_ast* nsh_parser_parse_command(struct nsh_parser* parser) {
     struct stringbuilder  sb;
     struct nsh_command*   command;
+    unsigned int          words;
 
+    words   = 0;
     command = nsh_command_new();
 
     stringbuilder_create(&sb);
@@ -62,14 +64,21 @@ static nsh_ast* nsh_parser_parse_command(struct nsh_parser* parser) {
         } else if (!reader_iss(parser->reader, "&&") && reader_checks(parser->reader, "&")) {
             nsh_command_set_detached(command);
         } else {
-            if (nsh_parser_read_word_into(parser, &sb))
-                nsh_command_add_argv(command, stringbuilder_get_static(&sb));
-            else
+            if (!nsh_parser_read_word_into(parser, &sb))
                 break;
+            else {
+                nsh_command_add_argv(command, stringbuilder_get_static(&sb));
+                words++;
+            }
         }
     }
 
     stringbuilder_destroy(&sb);
+
+    if (words == 0) {
+        nsh_command_delete(command);
+        return nsh_ast_new_none();
+    }
 
     return nsh_ast_new_command(command);
 }

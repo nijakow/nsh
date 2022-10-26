@@ -38,3 +38,12 @@ void charpp_append(struct charpp* charpp, const char* str) {
 char*const* charpp_get_static(struct charpp* charpp) {
     return charpp->data;
 }
+
+const char* charpp_get_static_at(struct charpp* charpp, size_t index) {
+    if (index >= charpp->fill) return NULL;
+    return charpp->data[index];
+}
+
+size_t charpp_get_size(struct charpp* charpp) {
+    return charpp->fill;
+}

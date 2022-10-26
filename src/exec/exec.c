@@ -14,7 +14,7 @@ void nsh_exec_destroy(struct nsh_exec* exec) {
 
 static bool nsh_exec_lookup_path(struct nsh_exec* exec, const char* pathname, char** result) {
     // TODO
-    *result = nsh_strdup("/bin/ls");
+    *result = nsh_strdup(pathname);
     return true;
 }
 
@@ -43,6 +43,7 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
 
 bool nsh_exec_ast(struct nsh_exec* exec, struct nsh_ast* ast) {
     switch (nsh_ast_get_type(ast)) {
+        case nsh_ast_type_none: return true;
         case nsh_ast_type_command: return nsh_exec_ast_command(exec, ast);
         default: return false;
     }
