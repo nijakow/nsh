@@ -22,7 +22,7 @@ static bool nsh_piper_safe_pipe(fd_t* in, fd_t* out) {
     nsh_piper_safe_assign(out, pipe.out);
 
     /*
-     * No call to nsh_pipe_destroy() - we hijacked the fd's! :P
+     * No call to nsh_pipe_destroy(...) - we hijacked the fd's! :P
      */
 
     return true;
@@ -79,7 +79,8 @@ void nsh_piper_redirect_output(struct nsh_piper* piper, fd_t fd) {
 }
 
 void nsh_piper_run_redirections(struct nsh_piper* piper, struct nsh_redirection* redir) {
-    fd_t  fd;
+    struct nsh_pipe  pipe;
+    fd_t             fd;
 
     while (redir != NULL) {
         switch (nsh_redirection_get_type(redir)) {
@@ -96,6 +97,15 @@ void nsh_piper_run_redirections(struct nsh_piper* piper, struct nsh_redirection*
             case nsh_redirection_type_append_file: {
                 if (nsh_open_writing_append(nsh_redirection_get_text(redir), &fd))
                     nsh_piper_redirect_output(piper, fd);
+                break;
+            }
+            case nsh_redirection_type_heredoc: {
+                if (nsh_pipe_create(&pipe)) {
+                    nsh_write_string_to_fd(pipe.in, nsh_redirection_get_text(redir));
+                    nsh_close(pipe.in);
+                    nsh_piper_redirect_input(piper, pipe.out);
+                    // No call to pipe_destroy(...), we hijacked the fd's! :P
+                }
                 break;
             }
             default:

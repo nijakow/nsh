@@ -63,6 +63,8 @@ struct nsh_pipe {
 bool nsh_pipe_create(struct nsh_pipe* pipe);
 void nsh_pipe_destroy(struct nsh_pipe* pipe);
 
+void nsh_write_string_to_fd(fd_t fd, const char* str);
+
 
 /*
  *     F o r k e y   S t u f f

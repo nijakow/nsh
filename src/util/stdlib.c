@@ -97,6 +97,13 @@ void nsh_pipe_destroy(struct nsh_pipe* the_pipe) {
     nsh_close(the_pipe->out);
 }
 
+void nsh_write_string_to_fd(fd_t fd, const char* str) {
+    if (str != NULL) {
+        // TODO: Check return value, maybe do multiple writes
+        write(fd, str, strlen(str));
+    }
+}
+
 
 enum nsh_fork_result nsh_fork(pid_t* pid) {
     *pid = fork();
