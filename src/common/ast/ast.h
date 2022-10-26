@@ -29,6 +29,11 @@ struct nsh_ast*  nsh_ast_new_and(struct nsh_ast* left, struct nsh_ast* right);
 struct nsh_ast*  nsh_ast_new_or(struct nsh_ast* left, struct nsh_ast* right);
 struct nsh_ast*  nsh_ast_new_while(struct nsh_ast* left, struct nsh_ast* right);
 
+enum nsh_ast_type    nsh_ast_get_type(struct nsh_ast* ast);
+struct nsh_command*  nsh_ast_get_command(struct nsh_ast* ast);
+struct nsh_ast*      nsh_ast_get_left(struct nsh_ast* ast);
+struct nsh_ast*      nsh_ast_get_right(struct nsh_ast* ast);
+
 void nsh_ast_dump(struct nsh_ast* ast);
 
 #endif

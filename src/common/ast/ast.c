@@ -64,6 +64,24 @@ struct nsh_ast* nsh_ast_new_while(struct nsh_ast* left, struct nsh_ast* right) {
     return nsh_ast_new_binary(nsh_ast_type_while, left, right);
 }
 
+
+enum nsh_ast_type nsh_ast_get_type(struct nsh_ast* ast) {
+    return ast->type;
+}
+
+struct nsh_command* nsh_ast_get_command(struct nsh_ast* ast) {
+    return ast->command;
+}
+
+struct nsh_ast* nsh_ast_get_left(struct nsh_ast* ast) {
+    return ast->left;
+}
+
+struct nsh_ast* nsh_ast_get_right(struct nsh_ast* ast) {
+    return ast->right;
+}
+
+
 static void nsh_ast_dump_with_depth(struct nsh_ast* ast, unsigned int depth) {
     unsigned int  index;
 
