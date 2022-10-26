@@ -27,3 +27,11 @@ void nsh_command_set_detached(struct nsh_command* command) {
 const char* nsh_command_get_name(struct nsh_command* command) {
     return charpp_get_static_at(&command->argv, 0);
 }
+
+size_t nsh_command_get_argv_count(struct nsh_command* command) {
+    return charpp_get_size(&command->argv);
+}
+
+const char*  nsh_command_get_argv(struct nsh_command* command, size_t index) {
+    return charpp_get_static_at(&command->argv, index);
+}

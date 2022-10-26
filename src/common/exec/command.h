@@ -17,5 +17,7 @@ void nsh_command_set_stderr_into_stdout(struct nsh_command* command);
 void nsh_command_set_detached(struct nsh_command* command);
 
 const char*  nsh_command_get_name(struct nsh_command* command);
+size_t       nsh_command_get_argv_count(struct nsh_command* command);
+const char*  nsh_command_get_argv(struct nsh_command* command, size_t index);
 
 #endif

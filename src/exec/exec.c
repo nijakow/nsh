@@ -17,6 +17,7 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
     struct nsh_task      task;
     struct nsh_command*  command;
     char*                path;
+    size_t               index;
 
     command = nsh_ast_get_command(ast);
 
@@ -24,10 +25,15 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
         return false;
 
     nsh_task_create(&task, path);
-    if (!nsh_task_perform(&task, &exec->waitset)) {
-        // TODO
-    } else {
-        // TODO
+    {
+        for (index = 1; index < nsh_command_get_argv_count(command); index++)
+            nsh_task_add_argv(&task, nsh_command_get_argv(command, index));
+        
+        if (!nsh_task_perform(&task, &exec->waitset)) {
+            // TODO
+        } else {
+            // TODO
+        }
     }
     nsh_task_destroy(&task);
     nsh_free(path);
