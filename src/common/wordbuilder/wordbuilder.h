@@ -2,11 +2,17 @@
 #define NSH_COMMON_WORDBUILDER_WORDBUILDER_H
 
 #include "../../defs.h"
+#include "../../util/stringbuilder.h"
 
-nsh_class(nsh_word, {});
+struct nsh_word;
 
-nsh_list_decl(nsh_word);
+nsh_class(nsh_wordbuilder, {
+    struct nsh_word*  words;
+});
 
-nsh_class(nsh_wordbuilder, {});
+void nsh_wordbuilder_push_text(struct nsh_wordbuilder* builder, const char* text);
+void nsh_wordbuilder_push_var(struct nsh_wordbuilder* builder, const char* var);
+
+void nsh_wordbuilder_build(struct nsh_wordbuilder* builder, struct stringbuilder* sb);
 
 #endif
