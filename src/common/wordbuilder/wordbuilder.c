@@ -55,10 +55,12 @@ static void nsh_word_push(struct nsh_word* word, struct nsh_word* other) {
 
 
 void nsh_wordbuilder_create(struct nsh_wordbuilder* wb) {
+    wb->next  = NULL;
     wb->words = NULL;
 }
 
 void nsh_wordbuilder_destroy(struct nsh_wordbuilder* wb) {
+    nsh_delete(nsh_wordbuilder, wb->next);
     nsh_delete(nsh_word, wb->words);
 }
 
