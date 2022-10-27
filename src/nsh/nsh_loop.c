@@ -4,8 +4,10 @@
 #include "nsh_loop.h"
 
 void nsh_print_prompt(struct nsh* nsh) {
-    printf("nsh $ ");
-    fflush(stdout);
+    if (isatty(NSH_STDIN_FD)) {
+        printf("nsh $ ");
+        fflush(stdout);
+    }
 }
 
 static bool nsh_parse_command(struct nsh* nsh, const char* cmd, struct nsh_ast** ast) {
