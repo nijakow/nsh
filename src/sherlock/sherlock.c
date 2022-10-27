@@ -34,6 +34,7 @@ static bool nsh_sherlock_lookup__with_pathvar(struct nsh_sherlock* sherlock, con
                 stringbuilder_append_cstr(&sb, path);
                 if (nsh_sherlock_lookup__trypath(sherlock, stringbuilder_get_static(&sb))) {
                     *result = stringbuilder_get(&sb);
+                    stringbuilder_destroy(&sb);
                     return true;
                 }
                 stringbuilder_clear(&sb);
