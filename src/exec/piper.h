@@ -28,6 +28,6 @@ void nsh_piper_setup_task(struct nsh_piper* piper, struct nsh_task* task);
 void nsh_piper_redirect_input(struct nsh_piper* piper, fd_t fd);
 void nsh_piper_redirect_output(struct nsh_piper* piper, fd_t fd);
 
-void nsh_piper_run_redirections(struct nsh_piper* piper, struct nsh_redirection* redir);
+bool nsh_piper_run_redirections(struct nsh_piper* piper, struct nsh_redirection* redir);
 
 #endif

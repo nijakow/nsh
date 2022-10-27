@@ -22,10 +22,14 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
 
     command = nsh_ast_get_command(ast);
 
-    if (!nsh_sherlock_lookup(exec->sherlock, nsh_command_get_name(command), &path))
+    if (!nsh_piper_run_redirections(&exec->piper, nsh_command_get_redirections(command)))
         return false;
+
+    if (!nsh_sherlock_lookup(exec->sherlock, nsh_command_get_name(command), &path)) {
+        fprintf(stderr, "%s: not found!\n", nsh_command_get_name(command));
+        return false;
+    }
     
-    nsh_piper_run_redirections(&exec->piper, nsh_command_get_redirections(command));
 
     nsh_task_create(&task, path);
     {

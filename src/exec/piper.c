@@ -80,7 +80,7 @@ void nsh_piper_redirect_output(struct nsh_piper* piper, fd_t fd) {
     nsh_piper_safe_assign(&piper->out, fd);
 }
 
-void nsh_piper_run_redirections(struct nsh_piper* piper, struct nsh_redirection* redir) {
+bool nsh_piper_run_redirections(struct nsh_piper* piper, struct nsh_redirection* redir) {
     struct nsh_pipe  pipe;
     fd_t             fd;
 
@@ -89,6 +89,10 @@ void nsh_piper_run_redirections(struct nsh_piper* piper, struct nsh_redirection*
             case nsh_redirection_type_input_file: {
                 if (nsh_open_reading(nsh_redirection_get_text(redir), &fd))
                     nsh_piper_redirect_input(piper, fd);
+                else {
+                    fprintf(stderr, "%s: not found!\n", nsh_redirection_get_text(redir));
+                    return false;
+                }
                 break;
             }
             case nsh_redirection_type_output_file: {
@@ -116,4 +120,6 @@ void nsh_piper_run_redirections(struct nsh_piper* piper, struct nsh_redirection*
         }
         redir = nsh_redirection_get_next(redir);
     }
+
+    return true;
 }
