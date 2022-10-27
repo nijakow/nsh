@@ -1,8 +1,9 @@
 #include "exec.h"
 
 
-void nsh_exec_create(struct nsh_exec* exec, struct nsh_sherlock* sherlock) {
-    exec->sherlock = sherlock;
+void nsh_exec_create(struct nsh_exec* exec, struct nsh_environment* environment, struct nsh_sherlock* sherlock) {
+    exec->environment = environment;
+    exec->sherlock    = sherlock;
     nsh_waitset_create(&exec->waitset);
     nsh_piper_create(&exec->piper);
 }
@@ -30,6 +31,8 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
     {
         for (index = 1; index < nsh_command_get_argv_count(command); index++)
             nsh_task_add_argv(&task, nsh_command_get_argv(command, index));
+        
+        nsh_task_add_env(&task, nsh_environment_get_static(exec->environment));
         
         nsh_piper_setup_task(&exec->piper, &task);
 

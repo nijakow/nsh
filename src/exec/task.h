@@ -41,6 +41,7 @@ void nsh_task_destroy(struct nsh_task* task);
 
 void nsh_task_add_argv(struct nsh_task* task, const char* str);
 void nsh_task_add_envp(struct nsh_task* task, const char* str);
+void nsh_task_add_env(struct nsh_task* task, char*const* envp);
 
 void nsh_task_set_input_fd(struct nsh_task* task, fd_t fd);
 void nsh_task_set_output_fd(struct nsh_task* task, fd_t fd);

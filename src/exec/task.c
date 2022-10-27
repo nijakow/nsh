@@ -58,6 +58,13 @@ void nsh_task_add_envp(struct nsh_task* task, const char* str) {
     charpp_append(&task->envp, str);
 }
 
+void nsh_task_add_env(struct nsh_task* task, char*const* envp) {
+    size_t  index;
+
+    for (index = 0; envp[index] != NULL; index++)
+        nsh_task_add_envp(task, envp[index]);
+}
+
 
 void nsh_task_set_input_fd(struct nsh_task* task, fd_t fd) {
     task->fds.in = fd;
