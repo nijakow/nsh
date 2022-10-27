@@ -15,6 +15,10 @@
 # include "util/stdlib.h"
 #endif
 
+#ifndef NSH_UTIL_LIST_H
+# include "util/list.h"
+#endif
+
 #ifndef NSH_UTIL_STRINGBUILDER_H
 # include "util/stringbuilder.h"
 #endif
