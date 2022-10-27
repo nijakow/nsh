@@ -28,10 +28,13 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
     if (!nsh_sherlock_lookup(exec->sherlock, nsh_command_get_name(command), &path)) {
         if (nsh_streq(nsh_command_get_name(command), "cd") && nsh_command_get_argv_count(command) == 2) {
             /* TODO: Move this to a better location */
-            nsh_chdir(nsh_command_get_argv(command, 1));
-            char buffer[1024];
-            if (getcwd(buffer, sizeof(buffer)) != NULL)
-                nsh_environment_set(exec->environment, "PWD", buffer);
+            if (!nsh_chdir(nsh_command_get_argv(command, 1)))
+                fprintf(stderr, "%s: not found!\n", nsh_command_get_argv(command, 1));
+            else {
+                char buffer[1024];
+                if (getcwd(buffer, sizeof(buffer)) != NULL)
+                    nsh_environment_set(exec->environment, "PWD", buffer);
+            }
             return true;
         } else if (nsh_streq(nsh_command_get_name(command), "export") && nsh_command_get_argv_count(command) == 2) {
             nsh_environment_put(exec->environment, nsh_command_get_argv(command, 1));
