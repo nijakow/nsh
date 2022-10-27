@@ -40,3 +40,7 @@ void nsh_signal(struct nsh* nsh, int signal_id) {
         }
     }
 }
+
+struct nsh_environment* nsh_get_environment(struct nsh* nsh) {
+    return &nsh->environment;
+}

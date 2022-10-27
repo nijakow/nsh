@@ -22,4 +22,6 @@ void nsh_halt(struct nsh* nsh);
 
 void nsh_signal(struct nsh* nsh, int signal);
 
+struct nsh_environment*  nsh_get_environment(struct nsh* nsh);
+
 #endif

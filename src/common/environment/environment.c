@@ -56,6 +56,17 @@ void nsh_environment_put(struct nsh_environment* env, const char* value) {
     charpp_append(&env->bindings, value);
 }
 
+void nsh_environment_set(struct nsh_environment* env, const char* key, const char* value) {
+    struct stringbuilder  sb;
+
+    stringbuilder_create(&sb);
+    stringbuilder_append_cstr(&sb, key);
+    stringbuilder_append_char(&sb, '=');
+    stringbuilder_append_cstr(&sb, value);
+    nsh_environment_put(env, stringbuilder_get_static(&sb));
+    stringbuilder_destroy(&sb);
+}
+
 char *const* nsh_environment_get_static(struct nsh_environment* env) {
     return charpp_get_static(&env->bindings);
 }
