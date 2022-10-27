@@ -27,7 +27,7 @@ void nsh_halt(struct nsh* nsh) {
 typedef void (*nsh_sighandler_t)(int signal_id);
 
 void nsh_signal(struct nsh* nsh, int signal_id) {
-    if (signal_id == SIGINT) {
+    if (signal_id == SIGINT || signal_id == SIGQUIT) {
         if (nsh->ignore_kill) {
             nsh->ignore_kill = false;
             if (nsh->is_reading) {
@@ -38,6 +38,5 @@ void nsh_signal(struct nsh* nsh, int signal_id) {
             nsh->ignore_kill = true;
             kill(0, signal_id);
         }
-        // nsh_halt(nsh);
     }
 }
