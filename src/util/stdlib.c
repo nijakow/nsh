@@ -132,3 +132,13 @@ bool nsh_file_is_executable(const char* path) {
 
     return ((stat(path, &st) == 0) && st.st_mode & S_IXUSR);
 }
+
+
+bool nsh_chdir(const char* path) {
+    return chdir(path) == 0;
+}
+
+
+bool nsh_streq(const char* s1, const char* s2) {
+    return strcmp(s1, s2) == 0;
+}

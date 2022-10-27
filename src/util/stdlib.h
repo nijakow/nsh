@@ -89,4 +89,13 @@ void nsh_exit(int code);
 
 bool nsh_file_is_executable(const char* path);
 
+bool nsh_chdir(const char* path);
+
+
+/*
+ *     S t r i n g y   S t u f f
+ */
+
+bool nsh_streq(const char* s1, const char* s2);
+
 #endif
