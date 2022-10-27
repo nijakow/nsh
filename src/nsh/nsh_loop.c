@@ -3,6 +3,11 @@
 
 #include "nsh_loop.h"
 
+void nsh_print_prompt(struct nsh* nsh) {
+    printf("nsh $ ");
+    fflush(stdout);
+}
+
 static bool nsh_parse_command(struct nsh* nsh, const char* cmd, struct nsh_ast** ast) {
     struct reader      reader;
     struct nsh_parser  parser;
@@ -47,9 +52,11 @@ void nsh_loop(struct nsh* nsh) {
     char input_buffer[1024];
 
     while (nsh->is_running) {
-        printf("nsh $ ");
-        fflush(stdout);
+        nsh_print_prompt(nsh);
+        nsh->ignore_kill = false;
+        nsh->is_reading  = true;
         if (fgets(input_buffer, sizeof(input_buffer), stdin) != NULL) {
+            nsh->is_reading = false;
             nsh_process_command(nsh, input_buffer);
         } else {
             nsh_halt(nsh);

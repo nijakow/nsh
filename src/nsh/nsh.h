@@ -8,7 +8,9 @@
 struct nsh {
     struct nsh_environment  environment;
     struct nsh_sherlock     sherlock;
+    bool                    ignore_kill;
     bool                    is_running;
+    bool                    is_reading;
 };
 
 void nsh_create(struct nsh* nsh);
