@@ -27,8 +27,8 @@ const char* nsh_environment_lookup(struct nsh_environment* env, const char* key,
                 if (key[index] == '\0') {
                          if (text[index] ==  '=') return &text[index + 1];
                     else if (text[index] == '\0') return &text[index];
-                    else break;
                 }
+                break;
             }
         }
     }

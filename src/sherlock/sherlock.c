@@ -1,7 +1,7 @@
 #include "sherlock.h"
 
-void nsh_sherlock_create(struct nsh_sherlock* sherlock) {
-
+void nsh_sherlock_create(struct nsh_sherlock* sherlock, struct nsh_environment* environment) {
+    sherlock->environment = environment;
 }
 
 void nsh_sherlock_destroy(struct nsh_sherlock* sherlock) {
@@ -51,5 +51,8 @@ static bool nsh_sherlock_lookup__with_pathvar(struct nsh_sherlock* sherlock, con
 }
 
 bool nsh_sherlock_lookup(struct nsh_sherlock* sherlock, const char* pathname, char** result) {
-    return nsh_sherlock_lookup__with_pathvar(sherlock, "/usr/local/bin:/usr/bin:/bin", pathname, result);
+    const char*  pathvar;
+
+    pathvar = nsh_environment_lookup(sherlock->environment, "PATH", "/usr/local/bin:/usr/bin:/bin");
+    return nsh_sherlock_lookup__with_pathvar(sherlock, pathvar, pathname, result);
 }

@@ -2,7 +2,7 @@
 
 void nsh_create(struct nsh* nsh) {
     nsh_environment_create(&nsh->environment);
-    nsh_sherlock_create(&nsh->sherlock);
+    nsh_sherlock_create(&nsh->sherlock, &nsh->environment);
     nsh->is_running = true;
 }
 
