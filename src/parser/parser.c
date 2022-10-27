@@ -7,17 +7,43 @@
 static struct nsh_ast* nsh_parser_parse_full_expr(struct nsh_parser* parser);
 
 
-void nsh_parser_create(struct nsh_parser* parser, struct reader* reader) {
-    parser->reader = reader;
+void nsh_parser_create(struct nsh_parser* parser, struct reader* reader, struct nsh_environment* env) {
+    parser->reader      = reader;
+    parser->environment = env;
 }
 
 void nsh_parser_destroy(struct nsh_parser* parser) {
 
 }
 
+static bool nsh_parser_is_var_ident(char c) {
+    return (c >= 'a' && c <= 'z')
+        || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9')
+        || (c == '?' || c == '!' || c == '_');
+}
+
+static void nsh_parser_read_ident(struct nsh_parser* parser, struct stringbuilder* sb) {
+    while (reader_has(parser->reader) && nsh_parser_is_var_ident(reader_get(parser->reader))) {
+        stringbuilder_append_char(sb, reader_get_and_advance(parser->reader));
+    }
+}
+
+static void nsh_parser_read_variable(struct nsh_parser* parser, struct stringbuilder* sb) {
+    struct stringbuilder  varname;
+
+    stringbuilder_create(&varname);
+    {
+        nsh_parser_read_ident(parser, &varname);
+        stringbuilder_append_cstr(sb, nsh_environment_lookup(parser->environment, stringbuilder_get_static(&varname), ""));
+    }
+    stringbuilder_destroy(&varname);
+}
+
 static void nsh_parser_read_quoted(struct nsh_parser* parser, struct stringbuilder* sb, char quote) {
     while (reader_has(parser->reader) && !reader_check(parser->reader, quote)) {
-        stringbuilder_append_char(sb, reader_get_and_advance(parser->reader));
+        if (quote == '\"' && reader_check(parser->reader, '$')) nsh_parser_read_variable(parser, sb);
+        else stringbuilder_append_char(sb, reader_get_and_advance(parser->reader));
     }
 }
 
@@ -31,6 +57,7 @@ static bool nsh_parser_read_word(struct nsh_parser* parser, struct stringbuilder
     while (reader_has(parser->reader) && !reader_is_space(parser->reader) && !reader_is_any(parser->reader, "|<>&;(){}")) {
              if (reader_check(parser->reader, '\"')) nsh_parser_read_quoted(parser, sb, '\"');
         else if (reader_check(parser->reader, '\'')) nsh_parser_read_quoted(parser, sb, '\'');
+        else if (reader_check(parser->reader, '$'))  nsh_parser_read_variable(parser, sb);
         else                                         stringbuilder_append_char(sb, reader_get_and_advance(parser->reader));
         result = true;
     }

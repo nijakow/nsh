@@ -16,7 +16,7 @@ static bool nsh_parse_command(struct nsh* nsh, const char* cmd, struct nsh_ast**
     bool               result;
 
     reader_create(&reader, cmd);
-    nsh_parser_create(&parser, &reader);
+    nsh_parser_create(&parser, &reader, &nsh->environment);
 
     result = nsh_parser_parse(&parser, ast);
 
