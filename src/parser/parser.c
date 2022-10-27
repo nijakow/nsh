@@ -94,6 +94,8 @@ static nsh_ast* nsh_parser_parse_command(struct nsh_parser* parser) {
 static struct nsh_ast* nsh_parser_parse_simple_expr(struct nsh_parser* parser) {
     struct nsh_ast*  ast;
 
+    reader_skip_whitespaces(parser->reader);
+
     if (reader_checks(parser->reader, "(")) {
         ast = nsh_parser_parse_full_expr(parser);
         reader_checks(parser->reader, ")");
