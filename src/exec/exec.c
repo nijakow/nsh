@@ -26,7 +26,7 @@ static bool nsh_exec_ast_command(struct nsh_exec* exec, struct nsh_ast* ast) {
         return false;
 
     if (!nsh_sherlock_lookup(exec->sherlock, nsh_command_get_name(command), &path)) {
-        if (nsh_streq(nsh_command_get_name(command), "cd") && nsh_command_get_argv_count(command) != 2) {
+        if (nsh_streq(nsh_command_get_name(command), "cd") && nsh_command_get_argv_count(command) == 2) {
             nsh_chdir(nsh_command_get_argv(command, 1));
             return true;
         }
